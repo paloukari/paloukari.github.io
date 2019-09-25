@@ -1,4 +1,4 @@
 User-agent: *
-Sitemap: https://paloukari.github.io//sitemap.xml
+Sitemap: https://havedatawilltrain.com//sitemap.xml
 Disallow: /ghost/
 Disallow: /p/
