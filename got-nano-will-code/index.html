@@ -1,0 +1,396 @@
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Got Nano, Wanna Code</title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../assets/built/screen.css?v=0dae2e676a">
+
+    <link rel="shortcut icon" href="../favicon.png" type="image/png">
+    <link rel="canonical" href="https://paloukari.github.io/got-nano-will-code/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="https://paloukari.github.io/got-nano-will-code/amp/">
+    
+    <meta property="og:site_name" content="HAVE DATA - WILL TRAIN">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Got Nano, Wanna Code">
+    <meta property="og:description" content="So, you just got your Jetson Nano and you're wondering how to get started? 
+
+Here's how I setup my development environment rig:
+
+Device Setup
+First, let's start with the device initial setup. To prepare my device, I
+followed the official getting started guide
+[https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro]
+from Nvidia. I used a 128 GB microSD
+[https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref=asc_df_B07FCMKK5X/?tag=hyprod-20&amp;linkCod">
+    <meta property="og:url" content="http://localhost:2368/got-nano-will-code/">
+    <meta property="og:image" content="http://localhost:2368/content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg">
+    <meta property="article:published_time" content="2019-09-25T20:39:41.000Z">
+    <meta property="article:modified_time" content="2019-09-25T20:41:06.000Z">
+    <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos">
+    <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Got Nano, Wanna Code">
+    <meta name="twitter:description" content="So, you just got your Jetson Nano and you're wondering how to get started? 
+
+Here's how I setup my development environment rig:
+
+Device Setup
+First, let's start with the device initial setup. To prepare my device, I
+followed the official getting started guide
+[https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro]
+from Nvidia. I used a 128 GB microSD
+[https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref=asc_df_B07FCMKK5X/?tag=hyprod-20&amp;linkCod">
+    <meta name="twitter:url" content="http://localhost:2368/got-nano-will-code/">
+    <meta name="twitter:image" content="http://localhost:2368/content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Spyros Garyfallos">
+    <meta name="twitter:site" content="@paloukari">
+    <meta name="twitter:creator" content="@paloukari">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="979">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "HAVE DATA - WILL TRAIN",
+        "logo": "http://localhost:2368/content/images/2019/07/Logo2.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Spyros Garyfallos",
+        "url": "http://localhost:2368/author/spyros/",
+        "sameAs": [
+            "https://www.facebook.com/spyros.garyfallos",
+            "https://twitter.com/paloukari"
+        ]
+    },
+    "headline": "Got Nano, Wanna Code",
+    "url": "http://localhost:2368/got-nano-will-code/",
+    "datePublished": "2019-09-25T20:39:41.000Z",
+    "dateModified": "2019-09-25T20:41:06.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://localhost:2368/content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg",
+        "width": 1200,
+        "height": 979
+    },
+    "description": "So, you just got your Jetson Nano and you&#x27;re wondering how to get started? \n\nHere&#x27;s how I setup my development environment rig:\n\nDevice Setup\nFirst, let&#x27;s start with the device initial setup. To prepare my device, I\nfollowed the official getting started guide\n[https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro]\nfrom Nvidia. I used a 128 GB microSD\n[https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref&#x3D;asc_df_B07FCMKK5X/?tag&#x3D;hyprod-20&amp;linkCod",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 2.25">
+    <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://paloukari.github.io/rss/">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-148729349-1');
+</script>
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+
+        
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+                <a class="site-nav-logo" href="https://paloukari.github.io"><img src="../content/images/2019/07/Logo2.png" alt="HAVE DATA - WILL TRAIN"></a>
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="https://paloukari.github.io/">Home</a></li>
+    <li class="nav-tag" role="menuitem"><a href="https://paloukari.github.io/tag/getting-started/">Tag</a></li>
+    <li class="nav-author" role="menuitem"><a href="https://paloukari.github.io/author/ghost/">Author</a></li>
+    <li class="nav-help" role="menuitem"><a href="https://docs.ghost.org">Help</a></li>
+</ul>
+
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+                <a class="social-link social-link-fb" href="https://www.facebook.com/spyros.garyfallos" title="Facebook" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"></path></svg>
+</a>
+                <a class="social-link social-link-tw" href="https://twitter.com/paloukari" title="Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"></path></svg>
+</a>
+        </div>
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/http://localhost:2368/rss/" title="RSS" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"></circle><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"></path></svg>
+</a>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <article class="post-full post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="2019-09-25">25 September 2019</time>
+                </section>
+                <h1 class="post-full-title">Got Nano, Wanna Code</h1>
+            </header>
+
+            <figure class="post-full-image">
+                <img srcset="../content/images/size/w300/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg 300w,
+                           ../content/images/size/w600/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpgg 600w,
+                          ../content/images/size/w1000/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpgpg 1000w,
+                         ../content/images/size/w2000/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpgjpg 2000w" sizes="(max-width: 800px) 400px,
+                            (max-width: 1170px) 700px,
+                            1400px" src="../content/images/size/w2000/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg" alt="Got Nano, Wanna Code">
+            </figure>
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    <p>So, you just got your Jetson Nano and you're wondering how to get started? </p><p>Here's how I setup my development environment rig:</p><h2 id="device-setup">Device Setup</h2><p>First, let's start with the device initial setup. To prepare my device, I followed the official <a href="https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro">getting started guide </a>from Nvidia. I used a <a href="https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref=asc_df_B07FCMKK5X/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=309776868400&amp;hvpos=1o1&amp;hvnetw=g&amp;hvrand=8725959158767136122&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=1027744&amp;hvtargid=pla-588455240877&amp;psc=1">128 GB microSD</a> and a <a href="https://www.amazon.com/5V-4000mA-switching-power-supply/dp/B01LY5TG5Y">power adapter</a> to power up my device, along with the <a href="https://www.jetsonhacks.com/2019/04/10/jetson-nano-use-more-power/">required jumper</a>. I connected a Dell P2415Q monitor using an HDMI cable and my USB receiver for my Logitech Triathlon keyboard and mouse. My development laptop is a Windows 10 machine.</p><h2 id="desktop-sharing">Desktop Sharing </h2><p>The desktop sharing app is broken. Follow <a href="https://blog.hackster.io/getting-started-with-the-nvidia-jetson-nano-developer-kit-43aa7c298797">this</a> article to fix it. You can also find instructions there on how to use Microsoft's Remote Desktop.</p><h2 id="development-environment">Development Environment</h2><p>The latest trend in the development experience in the software development industry is do your development using <strong>CLIs </strong>and <strong>code editors</strong>. I generally enjoy having all moving parts together, or at least in proximity when I'm coding.</p><p><strong>Visual Studio Code</strong> succeeded in combining together a cross-platform code editor, community driven plugins and decent UI/UX for development. But what I really like with Visual Studio Code is the recent <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>capability that allows you to keep a local UI/UX experience, while working on a remote host or container.</p><p>The other thing I like having in my development environment is <strong>idempotency</strong>: not having to deal with the dependencies of the host. <strong>Containers </strong>allow me to have multiple dependency configurations on the same host, and moreover, to share code between different hosts. For this reason, in every code sample I present in this blog, I make sure to include the corresponding container.</p><h3 id="step-1-remote-development-on-a-jetson-nano">Step 1: Remote Development on a Jetson Nano</h3><p>Because the ARM64 architecture is not officially supported yet, to install<strong> Visual Studio Code</strong> on your <strong>Jetson Nano</strong>, for now you'll have to use the <a href="https://code.headmelted.com/">community binaries</a>.</p><p><strong>Installing Visual Studio Code on a Jetson Nano</strong></p><!--kg-card-begin: code--><pre><code class="language-Bash"># Start an elevated session
+sudo -s
+
+# Install the community repo key
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0CC3FD642696BFC8
+
+# Run the installation script
+. &lt;( wget -O - https://code.headmelted.com/installers/apt.sh )
+</code></pre><!--kg-card-end: code--><p>If all goes well, you should get this output:</p><!--kg-card-begin: code--><pre><code class="language-Bash">Installation complete!
+
+You can start code at any time by calling "code-oss" within a terminal.
+
+A shortcut should also now be available in your desktop menus (depending on your distribution).</code></pre><!--kg-card-end: code--><p>Next, you'll need to install the <strong><a href="https://code.visualstudio.com/insiders/">Visual Studio Code Insiders</a> on your host </strong>and install the <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>extension.</p><p>As a final step, you'll need to setup a passwordless SSH between your host and the Nano. To do this, you'll need to create an SSH public-private key pair and configure your Nano to trust your public key.</p><p>To setup your local SSH key in Windows run:</p><!--kg-card-begin: code--><pre><code class="language-Powershell">Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+ssh-keygen -t rsa -b 4096 
+</code></pre><!--kg-card-end: code--><p>The keys will be created here: %USERPROFILE%\.ssh</p><p>To copy to the Nano your public key:</p><!--kg-card-begin: code--><pre><code class="language-CMD">SET REMOTEHOST=user@device
+scp %USERPROFILE%\.ssh\id_rsa.pub %REMOTEHOST%:~/tmp.pub
+ssh %REMOTEHOST% "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat ~/tmp.pub &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys &amp;&amp; rm -f ~/tmp.pub"</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+<p>You'll need to replace the value <strong>user@device</strong></p>
+</blockquote>
+<!--kg-card-end: markdown--><p>In you host VSCode, hit F1 and type <em>Remote-SSH: Open Configuration File..</em></p><p>Add your configuration:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">Host Nano
+    User user
+    HostName device
+    IdentityFile ~/.ssh/id_rsa</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+<p>Replace the values <strong>user</strong> and <strong>device</strong></p>
+</blockquote>
+<!--kg-card-end: markdown--><p>Connect to your Nano clicking the low left corner green icon:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://paloukari.github.io/content/images/2019/09/image-1.png" class="kg-image"></figure><!--kg-card-end: image--><p>Congrats! Once connected, you can open a remote folder and open remote terminals directly in VSCode.</p><h3 id="step-2-x-forwarding">Step 2: X forwarding</h3><p>What about applications that have a GUI? No worries, you can setup an X forwarding from Nano to your host. To do this, I'm using the <a href="https://token2shell.com/x410/"><strong>X410 server</strong></a> for Windows. After installing and running the server, make sure you allow public access.</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://paloukari.github.io/content/images/2019/09/image-2.png" class="kg-image"></figure><!--kg-card-end: image--><p>All is left to do is to configure the X Forwarding on your Nano device.</p><p>Open a terminal in VSCode (<strong>Ctrl+Shift+`</strong> on Windows) and run:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">export DISPLAY=10.135.62.79:0.0</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+<p>Make sure you replace the above IP with your host IP</p>
+</blockquote>
+<!--kg-card-end: markdown--><p> To verify everything works, from the terminal run:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">eog</code></pre><!--kg-card-end: code--><p>If all goes well, you should see this window:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://paloukari.github.io/content/images/2019/09/image-3.png" class="kg-image"></figure><!--kg-card-end: image--><p>To automatically set the remote variable when debugging your app, you can modify your<strong> launch.json </strong>and set the variable there:</p><!--kg-card-begin: code--><pre><code class="language-launch.json">{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal", 
+            "env":
+            {
+            "DISPLAY": "10.135.62.79:0.0" 
+            }
+        }
+    ]
+}</code></pre><!--kg-card-end: code--><p>To test all this, create a new python file containing the following code:</p><!--kg-card-begin: code--><pre><code class="language-test.py">import subprocess
+subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <strong>F5 </strong>and you'll get the same development experience, as with your local host, but<strong> running on a remote ARM machine!</strong></p><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to a Jetson Nano, using VSCode.</u></p>
+                </div>
+            </section>
+
+
+            <footer class="post-full-footer">
+
+
+                    
+<section class="author-card">
+        <span class="avatar-wrapper"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"></path></g></svg>
+</span>
+    <section class="author-card-content">
+        <h4 class="author-card-name"><a href="../author/spyros/">Spyros Garyfallos</a></h4>
+            <p>Read <a href="../author/spyros/">more posts</a> by this author.</p>
+    </section>
+</section>
+<div class="post-full-footer-right">
+    <a class="author-card-button" href="../author/spyros/">Read More</a>
+</div>
+
+
+            </footer>
+
+            
+            <section class="post-full-comments">
+                <div id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function () {
+                        this.page.url = "http://localhost:2368/got-nano-will-code/";  
+                        this.page.identifier = "ghost-5d7bf22d3694ea005ad2a5f8"
+                    };
+                    (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://have-data-will-train.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            </section>
+            
+
+        </article>
+
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+
+
+
+        </div>
+    </div>
+</aside>
+
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://paloukari.github.io">
+                <img src="../content/images/size/w30/2019/07/icon.png" alt="HAVE DATA - WILL TRAIN icon">
+            <span>HAVE DATA - WILL TRAIN</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">—</span>
+    <div class="floating-header-title">Got Nano, Wanna Code</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"></path>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=Got%20Nano%2C%20Wanna%20Code&amp;url=https://paloukari.github.io/got-nano-will-code/" onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"></path></svg>
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://paloukari.github.io/got-nano-will-code/" onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"></path></svg>
+        </a>
+    </div>
+    <progress id="reading-progress" class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://paloukari.github.io">HAVE DATA - WILL TRAIN</a> © 2019</section>
+                <nav class="site-footer-nav">
+                    <a href="https://paloukari.github.io">Latest Posts</a>
+                    <a href="https://www.facebook.com/spyros.garyfallos" target="_blank" rel="noopener">Facebook</a>
+                    <a href="https://twitter.com/paloukari" target="_blank" rel="noopener">Twitter</a>
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <script>
+        var images = document.querySelectorAll('.kg-gallery-image img');
+        images.forEach(function (image) {
+            var container = image.closest('.kg-gallery-image');
+            var width = image.attributes.width.value;
+            var height = image.attributes.height.value;
+            var ratio = width / height;
+            container.style.flex = ratio + ' 1 0%';
+        })
+    </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="../assets/built/jquery.fitvids.js?v=0dae2e676a"></script>
+
+
+    <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('#reading-progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+
+});
+</script>
+
+
+    
+
+</body>
