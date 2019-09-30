@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com//got-nano-will-code/" />
     <meta property="og:image" content="https://havedatawilltrain.com//content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-4.jpg" />
     <meta property="article:published_time" content="2019-09-25T20:39:41.000Z" />
-    <meta property="article:modified_time" content="2019-09-30T20:21:36.000Z" />
+    <meta property="article:modified_time" content="2019-09-30T20:33:30.000Z" />
     <meta property="article:tag" content="Jetson Nano" />
     <meta property="article:tag" content="Remote Debugging" />
     <meta property="article:tag" content="VSCode" />
@@ -72,7 +72,7 @@
     "headline": "Got Nano, Wanna Code",
     "url": "https://havedatawilltrain.com//got-nano-will-code/",
     "datePublished": "2019-09-25T20:39:41.000Z",
-    "dateModified": "2019-09-30T20:21:36.000Z",
+    "dateModified": "2019-09-30T20:33:30.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com//content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg",
@@ -208,7 +208,7 @@ ssh %REMOTEHOST% "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat ~/t
         }
     ]
 }</code></pre><!--kg-card-end: code--><p>To test all this, create a new python file containing the following code:</p><!--kg-card-begin: code--><pre><code class="language-test.py">import subprocess
-subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <strong>F5 </strong>and you'll get the same development experience, as with your local host, but<strong> running on a remote ARM machine!</strong></p><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to a Jetson Nano, using VSCode.</u></p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com//content/images/2019/09/ezgif-5-44d36401c343.gif" class="kg-image"><figcaption>Starting a remote debugging session on Jetson Nano</figcaption></figure><!--kg-card-end: image--><p>Next, we'll setup the same remote environment, but on a Docker container running on the Jetson device.</p><!--kg-card-begin: bookmark--><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://havedatawilltrain.com//drama-of-entropy/"><div class="kg-bookmark-content"><div class="kg-bookmark-title">Drama of entropy</div><div class="kg-bookmark-description">Remote Debugging inside a Container running on a Jetson Device</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="https://havedatawilltrain.com//favicon.png"><span class="kg-bookmark-author">Spyros Garyfallos</span><span class="kg-bookmark-publisher">HAVE DATA - WILL TRAIN</span></div></div><div class="kg-bookmark-thumbnail"><img src="https://havedatawilltrain.com//content/images/2019/09/Electrical-poles-2.jpg"></div></a></figure><!--kg-card-end: bookmark-->
+subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <strong>F5 </strong>and you'll get the same development experience, as with your local host, but<strong> running on a remote ARM machine!</strong></p><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to a Jetson Nano, using VSCode.</u></p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com//content/images/2019/09/ezgif-5-44d36401c343.gif" class="kg-image"><figcaption>Starting a remote debugging session on Jetson Nano</figcaption></figure><!--kg-card-end: image--><p>Next, we'll setup the same remote environment, <a href="https://havedatawilltrain.com//drama-of-entropy/">but on a Docker container running on the Jetson device</a>.</p>
                 </div>
             </section>
 
