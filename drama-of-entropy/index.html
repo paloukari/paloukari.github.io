@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com//drama-of-entropy/" />
     <meta property="og:image" content="https://havedatawilltrain.com//content/images/2019/09/Electrical-poles-2.jpg" />
     <meta property="article:published_time" content="2019-09-30T20:17:07.000Z" />
-    <meta property="article:modified_time" content="2019-09-30T20:38:16.000Z" />
+    <meta property="article:modified_time" content="2019-10-05T00:12:28.000Z" />
     <meta property="article:tag" content="Jetson Nano" />
     <meta property="article:tag" content="Jetson TX2" />
     <meta property="article:tag" content="Remote Debugging" />
@@ -75,7 +75,7 @@
     "headline": "Drama of entropy",
     "url": "https://havedatawilltrain.com//drama-of-entropy/",
     "datePublished": "2019-09-30T20:17:07.000Z",
-    "dateModified": "2019-09-30T20:38:16.000Z",
+    "dateModified": "2019-10-05T00:12:28.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com//content/images/2019/09/Electrical-poles.jpg",
@@ -167,10 +167,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
 
             <section class="post-full-content">
                 <div class="post-content">
-                    <p>I used to mess up my development environment over time by installing all the different experimentation dependencies. This is why I decided to switch to Docker containers.</p><p>The <strong>Jetson Nano </strong>default image comes with Docker runtime pre-installed. To package your app and avoid polluting your device OS with various dependencies, you can use Docker containers as development environments.</p><p>In fact, using a container as a development environment is a very similar to using directly a Jetson device for remote development. <a href="https://havedatawilltrain.com//got-nano-will-code/">Here's my post</a> that describes how to do the latter.</p><h3 id="remote-debugging-inside-a-container-running-on-a-jetson-device">Remote Debugging inside a Container running on a Jetson Device</h3><p></p><p>The <strong><a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-Container-Runtime-on-Jetson">NVIDIA Container Runtime on Jetson</a> </strong>repo<strong> </strong>has great information on how to use GPU accelerated  containers in both a Jetson and an X64 workstation.</p><p>Once you choose what's your base container, you'll need to setup a few more things. </p><p>You can either clone <a href="https://github.com/paloukari/jetson-remote-development">this repo</a> that contains all the below code, or start from scratch. The assumed file structure of all the following code is:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com//content/images/2019/09/image-5.png" class="kg-image"></figure><!--kg-card-end: image--><blockquote><strong>/keys: </strong>Here's where I keep my public ssh key.<br><strong>/.vscode:</strong> Here's where I keep my debugging configuration.<br><strong>/docker: </strong>Inside the <strong>docker </strong>folder, I put the container definition and the start and run scripts.<br><strong>/src: </strong>Inside the <strong>src </strong>folder, I put the application source code.</blockquote><h3 id="-keys">/keys</h3><p>You will need to setup a passwordless ssh between your host's VSCode and the container. To do this, you'll need to copy your ssh public key in the container's <code>authorized_keys</code> file. To get your public ssh key, run:<code>cat ~/.ssh/id_rsa.pub</code>. Copy the key value in the <code>id_rsa.pub</code> key file that's inside the /keys folder.</p><blockquote>My host is a Windows 10 machine and I generally make sure that my Windows and WSL keys are the same. To do this, I've copied my keys from <code>~/.ssh/</code> to <code>/mnt/c/users/[YOUR USERNAME]/.ssh</code>/. This way I get a convenience security symmetry.</blockquote><h3 id="-vscode">/vscode</h3><p>Here's the my <code>launch.json</code> and how to setup an X Server for forwarding any GUI running on the container to your host (<a href="https://havedatawilltrain.com//got-nano-will-code/">here's</a> more information how to set this up)</p><!--kg-card-begin: markdown--><pre><code>{
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+                    <p>I used to mess up my development environment over time by installing all the different experimentation dependencies. This is why I decided to switch to Docker containers.</p><p>The <strong>Jetson Nano </strong>default image comes with Docker runtime pre-installed. To package your app and avoid polluting your device OS with various dependencies, you can use Docker containers as development environments.</p><p>In fact, using a container as a development environment is a very similar to using directly a Jetson device for remote development. <a href="https://havedatawilltrain.com//got-nano-will-code/">Here's my post</a> on how to do the latter.</p><!--kg-card-begin: hr--><hr><!--kg-card-end: hr--><h2 id="remote-debugging-inside-a-container-running-on-a-jetson-device">Remote Debugging inside a Container running on a Jetson Device</h2><p></p><p>The <strong><a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-Container-Runtime-on-Jetson">NVIDIA Container Runtime on Jetson</a> </strong>repo<strong> </strong>has great information on how to use GPU accelerated containers in both the Jetson family, and an X64 workstation.</p><p>Once you choose what's your base container, you'll need to setup a few more things. </p><p>You can either clone <strong><a href="https://github.com/paloukari/jetson-detectors">this repo</a></strong> that contains all the below code, or start from scratch. The assumed file structure of all the following code is:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com//content/images/2019/10/image-2.png" class="kg-image"></figure><!--kg-card-end: image--><blockquote><strong>/keys: </strong>Here's where I keep my public ssh key.<br><strong>/.vscode:</strong> Here's where I keep my debugging configuration.<br><strong>/docker: </strong>Inside the <strong>docker </strong>folder I put the container definitions.<br><strong>/src: </strong>Here's the application source code.</blockquote><h3 id="-keys">/keys</h3><p>You will need to setup a passwordless ssh between your host's VSCode and the container. To do this, you'll need to copy your ssh public key in the container's <code>authorized_keys</code> file. To get your public ssh key, run:<code>cat ~/.ssh/id_rsa.pub</code>. Copy the key value in the <code>id_rsa.pub</code> key file that's inside the /keys folder.</p><blockquote>My host is a Windows 10 machine and I generally make sure that my Windows and WSL keys are the same. To do this, I've copied my keys from <code>~/.ssh/</code> to <code>/mnt/c/users/[YOUR USERNAME]/.ssh</code>/. This way I get a convenience security symmetry.</blockquote><h3 id="-vscode">/.vscode</h3><p>Here's the my <code>launch.json</code> and how to setup an X Server for forwarding any GUI running on the container to your host (<a href="https://havedatawilltrain.com//got-nano-will-code/">here's</a> more information how to set this up)</p><!--kg-card-begin: markdown--><pre><code>{    
     &quot;version&quot;: &quot;0.2.0&quot;,
     &quot;configurations&quot;: [
         {
@@ -187,7 +184,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
     ]
 }
 </code></pre>
-<!--kg-card-end: markdown--><blockquote>Replace the IP with your host's IP. I'm using the X410 X Server on Windows 10.</blockquote><h3 id="-docker">/docker</h3><p>In this example, I've started from the a bare minimum, the l4t OS. This dockerfile is self explanatory. </p><!--kg-card-begin: markdown--><pre><code>FROM nvcr.io/nvidia/l4t-base:r32.2
+<!--kg-card-end: markdown--><blockquote>Replace the IP with your host's IP. I'm using the <strong>X410 X Server</strong> on Windows 10.</blockquote><h3 id="-docker">/docker</h3><p>In this example, I've started from a bare minimum, the<strong> l4t OS</strong>. This dockerfile is self explanatory. </p><!--kg-card-begin: markdown--><pre><code>FROM nvcr.io/nvidia/l4t-base:r32.2
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -195,38 +192,33 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update &amp;&amp; apt-get --yes install openssh-server python3-dev python3-pip python3-opencv git
 RUN pip3 install --upgrade pip
 
-# Install the code requirements
-COPY ./src/requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
+RUN pip3 install click
 
-# Install the ssh public key
-COPY ./keys/id_rsa.pub /tmp/tmp.pub
-RUN mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat /tmp/tmp.pub &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys &amp;&amp; rm -f /tmp/tmp.pub
-
-# Install VSCode
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0CC3FD642696BFC8
-RUN wget -O /tmp/apt.sh https://code.headmelted.com/installers/apt.sh
-RUN chmod +x /tmp/apt.sh
-RUN /tmp/apt.sh
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 
 # Set the WORKDIR
 WORKDIR /src
 
-# Restart ssh service
 ENTRYPOINT service ssh restart &amp;&amp; bash
+
+# Install the ssh public key - Remove this in a production deployment
+COPY ./keys/id_rsa.pub /tmp/tmp.pub
+RUN mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat /tmp/tmp.pub &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys &amp;&amp; rm -f /tmp/tmp.pub
+
 </code></pre>
-<!--kg-card-end: markdown--><h3 id="-src">/src</h3><p>This is where I put all the application code. You can test that the X forwarding works by opening running the <code>x-forwarding.py</code>. You'll have to install the <code>eog</code> application in the container first by running <code>apt-get install eog</code> in a new VSCode terminal.</p><p>Here's the <code>x-forwarding.py</code> code:</p><!--kg-card-begin: markdown--><pre><code>import subprocess
+<!--kg-card-end: markdown--><h3 id="-src">/src</h3><p>This is where I put all the application code. You can test that the X forwarding works by opening running the <code>xtest.py</code>. You'll have to install the <code>eog</code> application in the container first by running <code>apt-get install eog</code> in a new VSCode terminal.</p><p>Here's the <code>xtest.py</code> code:</p><!--kg-card-begin: markdown--><pre><code>import subprocess
 subprocess.run([&quot;eog&quot;])
 </code></pre>
 <!--kg-card-end: markdown--><h2 id="wiring-everything-up">Wiring everything up</h2><h3 id="on-your-jetson-device-run-">On your Jetson device, run:</h3><!--kg-card-begin: markdown--><pre><code># Clone the example repo
-git clone https://github.com/paloukari/jetson-remote-development
+git clone https://github.com/paloukari/jetson-detectors
 cd jetson-remote-development
 
 # Build the dev container
-docker build . -f ./docker/Dockerfile.python3.dev -t dev-python3
+sudo docker build . -f ./docker/Dockerfile.cpu -t object-detection-cpu
 
 # Run the container
-docker run --rm --runtime nvidia -ti -e DISPLAY=$DISPLAY -v &quot;$PWD&quot;:/src -p 32001:22 dev-python3
+sudo docker run --rm --runtime nvidia --privileged -ti -e DISPLAY=$DISPLAY -v &quot;$PWD&quot;:/src -p 32001:22 object-detection-cpu
 </code></pre>
 <!--kg-card-end: markdown--><p>In your host's VSCode, add this information in the Remote-SSH configuration file:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com//content/images/2019/09/image-6.png" class="kg-image"></figure><!--kg-card-end: image--><!--kg-card-begin: markdown--><pre><code>Host Nano
     User spyros
@@ -240,7 +232,7 @@ Host NanoContainer
     Port 32001
 
 </code></pre>
-<!--kg-card-end: markdown--><p>Now, you should be able to connect to the NanoContainer Remote SSH host. Last step is to install the Python VSCode extension on the remote host and to update the <code>launch.json</code> file with your host's IP. </p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com//content/images/2019/09/image-8.png" class="kg-image"><figcaption>The VSCode extensions need to be installed in both machines in a Remote-SSH session</figcaption></figure><!--kg-card-end: image--><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to container running on a Jetson Nano, using VSCode.</u></p>
+<!--kg-card-end: markdown--><p>Now, you should be able to connect to the NanoContainer Remote SSH host. Last step is to install the Python VSCode extension on the remote host. </p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com//content/images/2019/09/image-8.png" class="kg-image"><figcaption>The VSCode extensions need to be installed in both machines in a Remote-SSH session</figcaption></figure><!--kg-card-end: image--><p>Open the <code>xtest.py</code> and fit F5. </p><blockquote>You need to install the eog app in the container.</blockquote><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com//content/images/2019/10/ezgif-5-44d36401c343.gif" class="kg-image"></figure><!--kg-card-end: image--><p><strong>What we achieved: </strong><u>We can now do remote development from a Windows host to a container running on a Jetson Nano, using VSCode.</u></p>
                 </div>
             </section>
 
@@ -300,14 +292,66 @@ Host NanoContainer
 </div>
                     <div class="read-next-card-content">
                         <ul>
+                            <li><a href="/three-threads-to-perdido/">Three Threads to Perdido</a></li>
                             <li><a href="/got-nano-will-code/">Got Nano, Wanna Code</a></li>
                         </ul>
                     </div>
                     <footer class="read-next-card-footer">
-                        <a href="/tag/jetson-nano/">1 post →</a>
+                        <a href="/tag/jetson-nano/">See all 2 posts →</a>
                     </footer>
                 </article>
 
+                <article class="post-card post tag-tensorflow tag-object-detection tag-tensorrt tag-jetson-nano tag-jetson-tx2 tag-docker tag-arm tag-containers ">
+
+    <a class="post-card-image-link" href="/three-threads-to-perdido/">
+        <img class="post-card-image"
+            srcset="/content/images/size/w300/2019/07/cowboys-2277376-1.jpg 300w,
+                    /content/images/size/w600/2019/07/cowboys-2277376-1.jpg 600w,
+                    /content/images/size/w1000/2019/07/cowboys-2277376-1.jpg 1000w,
+                    /content/images/size/w2000/2019/07/cowboys-2277376-1.jpg 2000w"
+            sizes="(max-width: 1000px) 400px, 700px"
+            src="/content/images/size/w600/2019/07/cowboys-2277376-1.jpg"
+            alt="Three Threads to Perdido"
+        />
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/three-threads-to-perdido/">
+
+            <header class="post-card-header">
+                    <span class="post-card-tags">TensorFlow</span>
+                <h2 class="post-card-title">Three Threads to Perdido</h2>
+            </header>
+
+            <section class="post-card-excerpt">
+                <p>This is the first part of a blog series that explores the topic of "High Throughput Object Detection" on the Edge.</p>
+            </section>
+
+        </a>
+
+        <footer class="post-card-meta">
+
+            <ul class="author-list">
+                <li class="author-list-item">
+
+                    <div class="author-name-tooltip">
+                        Spyros Garyfallos
+                    </div>
+
+                        <a href="/author/spyros/" class="static-avatar">
+                            <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+                        </a>
+                </li>
+            </ul>
+
+            <span class="reading-time">4 min read</span>
+
+        </footer>
+
+    </div>
+
+</article>
 
                 <article class="post-card post tag-jetson-nano tag-remote-debugging tag-vscode tag-arm ">
 
