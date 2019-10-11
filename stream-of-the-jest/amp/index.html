@@ -3,47 +3,43 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Three Threads to Perdido</title>
+    <title>Stream of the Jest</title>
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
-    <link rel="canonical" href="https://havedatawilltrain.com/three-threads-to-perdido/" />
+    <link rel="canonical" href="https://havedatawilltrain.com/stream-of-the-jest/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Three Threads to Perdido" />
-    <meta property="og:description" content="This is the first part of a blog series that explores the topic of &quot;High Throughput Object Detection&quot; on the Edge." />
-    <meta property="og:url" content="https://havedatawilltrain.com/three-threads-to-perdido/" />
-    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2019/10/cowboys_twitter-2.png" />
-    <meta property="article:published_time" content="2019-10-04T18:56:00.000Z" />
-    <meta property="article:modified_time" content="2019-10-11T21:32:38.000Z" />
-    <meta property="article:tag" content="TensorFlow" />
+    <meta property="og:title" content="Stream of the Jest" />
+    <meta property="og:description" content="Exploring an optimized streaming Object Detection application pipeline using the DeepStream SDK and SSD Inception V2 COCO on a Jetson device." />
+    <meta property="og:url" content="https://havedatawilltrain.com/stream-of-the-jest/" />
+    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2019/10/053747ada3375e440325c09210983c7c.jpg" />
+    <meta property="article:published_time" content="2019-10-11T21:29:44.000Z" />
+    <meta property="article:modified_time" content="2019-10-11T21:31:45.000Z" />
+    <meta property="article:tag" content="Jetson TX2" />
     <meta property="article:tag" content="Object Detection" />
     <meta property="article:tag" content="TensorRT" />
-    <meta property="article:tag" content="Jetson Nano" />
-    <meta property="article:tag" content="Jetson TX2" />
-    <meta property="article:tag" content="Docker" />
     <meta property="article:tag" content="ARM" />
-    <meta property="article:tag" content="Containers" />
     
     <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
     <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Three Threads to Perdido" />
-    <meta name="twitter:description" content="This is the first part of a blog series that explores the topic of &quot;High Throughput Object Detection&quot; on the Edge." />
-    <meta name="twitter:url" content="https://havedatawilltrain.com/three-threads-to-perdido/" />
-    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2019/10/cowboys_twitter-1.png" />
+    <meta name="twitter:title" content="Stream of the Jest" />
+    <meta name="twitter:description" content="Exploring an optimized streaming Object Detection application pipeline using the DeepStream SDK and SSD Inception V2 COCO on a Jetson device." />
+    <meta name="twitter:url" content="https://havedatawilltrain.com/stream-of-the-jest/" />
+    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2019/10/053747ada3375e440325c09210983c7c.png" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Spyros Garyfallos" />
     <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="TensorFlow, Object Detection, TensorRT, Jetson Nano, Jetson TX2, Docker, ARM, Containers" />
+    <meta name="twitter:data2" content="Jetson TX2, Object Detection, TensorRT, ARM" />
     <meta name="twitter:site" content="@SpyrosCarnation" />
     <meta name="twitter:creator" content="@SpyrosCarnation" />
-    <meta property="og:image:width" content="510" />
-    <meta property="og:image:height" content="261" />
+    <meta property="og:image:width" content="750" />
+    <meta property="og:image:height" content="495" />
     
     <script type="application/ld+json">
 {
@@ -69,18 +65,18 @@
             "https://twitter.com/SpyrosCarnation"
         ]
     },
-    "headline": "Three Threads to Perdido",
-    "url": "https://havedatawilltrain.com/three-threads-to-perdido/",
-    "datePublished": "2019-10-04T18:56:00.000Z",
-    "dateModified": "2019-10-11T21:32:38.000Z",
+    "headline": "Stream of the Jest",
+    "url": "https://havedatawilltrain.com/stream-of-the-jest/",
+    "datePublished": "2019-10-11T21:29:44.000Z",
+    "dateModified": "2019-10-11T21:31:45.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://havedatawilltrain.com/content/images/2019/10/cowboys-2277376-2.jpg",
-        "width": 2000,
-        "height": 2217
+        "url": "https://havedatawilltrain.com/content/images/2019/10/053747ada3375e440325c09210983c7c.jpg",
+        "width": 750,
+        "height": 495
     },
-    "keywords": "TensorFlow, Object Detection, TensorRT, Jetson Nano, Jetson TX2, Docker, ARM, Containers",
-    "description": "This is the first part of a blog series that explores the topic of &quot;High Throughput Object Detection&quot; on the Edge.",
+    "keywords": "Jetson TX2, Object Detection, TensorRT, ARM",
+    "description": "Exploring an optimized streaming Object Detection application pipeline using the DeepStream SDK and SSD Inception V2 COCO on a Jetson device.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://havedatawilltrain.com/"
@@ -112,28 +108,47 @@
         <article class="post">
 
             <header class="post-header">
-                <h1 class="post-title">Three Threads to Perdido</h1>
+                <h1 class="post-title">Stream of the Jest</h1>
                 <section class="post-meta">
                     <p class="author">by <a href="/author/spyros/">Spyros Garyfallos</a></p>
-                    <time class="post-date" datetime="2019-10-04">2019-10-04</time>
+                    <time class="post-date" datetime="2019-10-11">2019-10-11</time>
                 </section>
             </header>
             <figure class="post-image">
-                <amp-img src="https://havedatawilltrain.com/content/images/2019/10/cowboys-2277376-2.jpg" width="600" height="400" layout="responsive"></amp-img>
+                <amp-img src="https://havedatawilltrain.com/content/images/2019/10/053747ada3375e440325c09210983c7c.jpg" width="600" height="400" layout="responsive"></amp-img>
             </figure>
             <section class="post-content">
 
-                <p>Welcome stranger, I've been expecting you.</p><p>I know what brought you here, it's despair. I know what is out there,  I've seen it, and it's not pretty. Bad designs, broken code samples, no container definitions, missing dependency libraries, poor performance, you name it. </p><p>I was recently exploring ways to do<strong> real time object detection </strong>on my <strong>Nvidia Jetson TX2. </strong>The <em>real time </em>term here simply means, low latency and high throughput. It's a very loosely defined term, but it's used here in contrast to the store-and-process pattern, where storage is used as an interim stage.</p><hr></hr><h2 id="high-performance-objection-detection-on-a-jetson-tx2">High Performance Objection Detection on a Jetson TX2</h2><h3 id="starting-simple">Starting simple</h3><p>We'll explore a simple program that detects human faces using the camera input and renders the camera input with the bounding boxes. This one is based on the<strong> <a href="https://docs.opencv.org/trunk/db/d28/tutorial_cascade_classifier.html">Haar Cascades</a></strong><a href="https://docs.opencv.org/trunk/db/d28/tutorial_cascade_classifier.html"> </a>and is one of the simplest ways to get started with Object Detection on the Edge. There is no Jetson platform dependency for this code, only on <strong>OpenCV</strong>.</p><blockquote><em>I'm using a remote development setup to do all of my coding that uses containers. This way you can experiment with all the code samples yourself without having to setup any runtime dependencies on your device.</em><br /><br /><a href="https://havedatawilltrain.com/got-nano-will-code/"><strong>Here </strong></a>is how I setup my device and my <a href="https://havedatawilltrain.com/drama-of-entropy/"><strong>remote development environment</strong></a> with VSCode.</blockquote><p>Start by cloning the <a href="https://github.com/paloukari/jetson-detectors">example code</a>. After cloning, you need to build and run the container that we'll be using to run our code.</p><h3 id="clonetheexamplerepo">Clone the example repo</h3>
-<pre><code>https://github.com/paloukari/jetson-detectors
-cd jetson-detectors
-</code></pre>
-<h3 id="tobuildandrunthedevelopmentcontainer">To build and run the development container</h3>
-<pre><code>sudo docker build . -f ./docker/Dockerfile.cpu -t object-detection-cpu
-sudo docker run --rm --runtime nvidia --privileged -ti -e DISPLAY=$DISPLAY -v "$PWD":/src -p 32001:22 object-detection-cpu
-</code></pre>
-<p>The <code>--privileged</code> is required for accessing all the devices. Alternatively you can use the <code>--device /dev/video0</code>. </p><p><a href="https://github.com/paloukari/jetson-detectors/blob/master/src/cpudetector.py">Here's the code we'll be running.</a> Simple open the <code>cpudetector.py</code> file in VSCode and hit F5 or just run: <code>python3 src/cpudetector.py</code>. In both cases you'll need to setup the X forwarding. See the <a href="https://havedatawilltrain.com/got-nano-will-code/">Step 2: X forwarding</a> on how to do this.</p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>~23 FPS with OpenCV</figcaption></figure><p><strong>We get about 23 FPS</strong>. Use the <code>tegrastats</code> to see what's happening in the GPU:</p><figure class="kg-card kg-image-card"></figure><p>We're interested in the <code>GR3D_FREQ</code> values. It's clear that this code runs only on the device CPUs with more than 75% utilization per core, and with <strong>0% GPU utilization</strong>.</p><h3 id="next-up-we-use-go-deep">Next up, we use go Deep</h3><p>Haar Cascades is good, but how about detecting more things at once? In this case, we need to use Deep Neural Networks. We will need to use another container from now on to run the following code. </p><h3 id="to-build-and-run-the-gpu-accelerated-container">To build and run the GPU accelerated container</h3><pre><code>sudo docker build . -f ./docker/Dockerfile.gpu -t object-detection-gpu
-sudo docker run --rm --runtime nvidia --privileged -ti -e DISPLAY=$DISPLAY -v "$PWD":/src -p 32001:22 object-detection-gpu
-</code></pre><blockquote>WARNING: This build takes a few hours to complete on a TX2. The main reason is because we build the Protobuf library to increase to models loading performance. To reduce this the build time, you can <a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-Container-Runtime-on-Jetson#building-jetson-containers-on-an-x86-workstation-using-qemu">build the same container on a X64 workstation</a>.</blockquote><p>In the first attempt, we'll be using the official <a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md">TensorFlow pre-trained networks</a>. The code we'll be running is <a href="https://github.com/paloukari/jetson-detectors/blob/master/src/cpudetector.py">here</a>.</p><p>When you run <code>python3 src/gpudetector.py --model-name ssd_inception_v2_coco</code> , the code will try to download the specified model inside the <code>/models</code> folder, and start the object detection in a very similar fashion as we did before. The <code>--model-name</code> default value is <code>ssd_inception_v2_coco</code>, so you can omit it.</p><p>This model has been trained to detect 90 classes (you can see the details in the downloaded <code>pipeline.config</code> file). Our performance plummeted to <strong>~8 FPS.</strong></p><p>Run <code>python3 src/gpudetector.py</code></p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>~8 FPS with a the TensorFlow SSD Inception V2 COCO model</figcaption></figure><p>What happened? We've started running the inference in the GPU which for a single inference round trip now takes more time. Also, we move now a lot of data from the camera to RAM and from there to the GPU. This has an obvious performance penalty. </p><p>What we can do is start with optimizing the inference. We'll use the TensorRT optimization to speedup the inference. Run the same file as before, but now with the <code>--trt-optimize</code> flag. This flag will convert the specified TensorFlow mode to a TensorRT and save if to a local file for the next time.</p><p>Run <code>python3 gpudetector.py --trt-optimize</code>:</p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>~15 FPS with TensorRT optimization </figcaption></figure><p>Better, but still far from perfect. The way we can tell is by looking at the GPU utilization in the background, it drops periodically to 0%. This happens because the code is being executed sequentially. In other words, for each frame we have to wait to get the bits from the camera, create an in memory copy, push it to the GPU, perform the inference, and render the original frame with the scoring results.</p><p>We can break down this sequential execution to an asynchronous parallel version. We can have a dedicated thread for reading the data from the camera, one for running inference in the GPU and one for rendering the results.</p><p>To test this version, run  <code>python3 gpudetectorasync.py --trt-optimize</code></p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>~40 FPS with async TensorRT</figcaption></figure><p>By parallelizing expensive calculations, we've achieved a better performance compared to the OpenCV first example. The trade off now is that we've introduced a slight delay between the current frame and the corresponding inference result. To be more precise here, because the inference now is running on an independent thread, the observed FPS do not match with the number of inferences per second.</p><p><strong>What we have achieved:</strong> <u>We've explored different ways of improving the performance of the typical pedagogic object detection while-loop.</u></p><p>Next,<a href="https://havedatawilltrain.com/stream-of-the-jest/"> in this post </a>we'll explore how we can improve even more our detector, by using the <a href="https://developer.nvidia.com/deepstream-sdk">DeepStream SDK</a>.</p>
+                <p>In a <a href="https://havedatawilltrain.com/three-threads-to-perdido/">previous post </a>we explored a high performance implementation of a Python <strong>Object Detector </strong>based on the <strong>SSD Inception V2 COCO </strong>model running on an <strong>NVIDIA Jetson TX2</strong>. In this post we will explore how we can implement the same Object Detector using NVIDIA's <strong><a href="https://developer.nvidia.com/deepstream-sdk">DeepStream SDK</a>.</strong></p><p>Previously, in the process of increasing the observed detector Frames Per Second (FPS) we saw how we can optimize the model with TensorRT and at the same time replace the simple synchronous while-loop implementation to an asynchronous multi-threaded one.</p><p>We noticed the increased FPS and the introduced trade-offs: the increased inference latency and the increased CPU and GPU utilization. Reading the web camera input frame-by-frame and pushing the data to the GPU for inference can be very challenging.</p><h2 id="deepstream-object-detector-on-a-jetson-tx2">DeepStream Object Detector on a Jetson TX2</h2><p>The data generated by a web camera are streaming data. By definition, data streams are continuous sources of data, in other words, sources that you cannot pause in any way. One of the strategies in processing data streams is to record the data and run an offline processing pipeline. This is called batch processing.</p><p>In our case we are interested in minimizing the latency of inference. A more appropriate strategy then would be a real time stream processing pipeline.<strong> </strong>The <a href="https://developer.nvidia.com/deepstream-sdk"><strong>DeepStream SDK</strong></a><strong> </strong>offers different<strong> hardware accelerated</strong> <strong>plugins </strong>to compose different real time stream processing pipelines. </p><p>NVIDIA also offers <a href="https://ngc.nvidia.com/catalog/containers/nvidia:deepstream-l4t"><strong>pre-built containers</strong></a> for running a containerized DeepStream application. Unfortunately, at the time of this blog post, the containers had some missing dependencies. For this reason, this application is run directly on the TX2 device.</p><h3 id="deepstream-object-detector-application-setup">DeepStream Object Detector application setup</h3><p>To run a custom DeepSteam object detector pipeline with the SSD Inception V2 COCO model on a TX2, run the following commands. </p><blockquote>I'm using JetPack 4.2.1</blockquote><h3 id="step-1-get-the-model-"><strong>Step 1: Get the model. </strong></h3><p>This command will download and extract in <code>/temp</code> the same model we used <a href="https://havedatawilltrain.com/three-threads-to-perdido/">in the Python implementation.</a></p><pre><code class="language-bash">wget -qO- http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2017_11_17.tar.gz | tar xvz -C /tmp</code></pre><h3 id="step-2-optimize-the-model-with-tensorrt">Step 2: Optimize the model with TensorRT</h3><p>This command will convert this downloaded frozen graph to a UFF MetaGraph model.</p><pre><code class="language-bash">python3 /usr/lib/python3.6/dist-packages/uff/bin/convert_to_uff.py \
+  /tmp/ssd_inception_v2_coco_2017_11_17/frozen_inference_graph.pb -O NMS \
+  -p /usr/src/tensorrt/samples/sampleUffSSD/config.py \
+  -o /tmp/sample_ssd_relu6.uff</code></pre><p>The generated UFF file is here: <code>/tmp/sample_ssd_relu6.uff</code>.</p><h3 id="step-3-compile-the-custom-object-detector-application">Step 3: Compile the custom object detector application</h3><p>This will build the <code>nvdsinfer_custom_impl</code> sample that comes with the SDK.</p><pre><code class="language-bash">cd /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_SSD
+CUDA_VER=10.0 make -C nvdsinfer_custom_impl</code></pre><p>We need to copy the UFF MetaGraph along with the label names file inside this folder.</p><pre><code class="language-bash">cp /usr/src/tensorrt/data/ssd/ssd_coco_labels.txt .
+cp /tmp/sample_ssd_relu6.uff .</code></pre><h3 id="step-4-edit-the-application-configuration-file-to-use-your-camera">Step 4: Edit the application configuration file to use your camera</h3><p>Located in the same directory, the file <code>deepstream_app_config_ssd.txt</code> contains information about the DeepStream pipeline components, including the input source. The original example has been configured to use a static file as source.</p><pre><code>[source0]
+enable=1
+#Type - 1=CameraV4L2 2=URI 3=MultiURI
+type=3
+num-sources=1
+uri=file://../../samples/streams/sample_1080p_h264.mp4
+gpu-id=0
+cudadec-memtype=0</code></pre><p>If you want to use a USB camera, make a copy of this file and change the above section to:</p><pre><code>[source0]
+enable=1
+#Type - 1=CameraV4L2 2=URI 3=MultiURI
+type=1
+camera-width=1280
+camera-height=720
+camera-fps-n=30
+camera-fps-d=1
+camera-v4l2-dev-node=1</code></pre><p>Save this as <code>deepstream_app_config_ssd_USB.txt</code>.</p><p>TX2 comes with an on board CSI camera. If you want to use the embedded CSI camera change the source to:</p><pre><code>[source0]
+enable=1
+#Type - 1=CameraV4L2 2=URI 3=MultiURI 4=RTSP 5=CSI
+type=5
+camera-width=1280
+camera-height=720
+camera-fps-n=30
+camera-fps-d=1</code></pre><p>Save this file as <code>deepstream_app_config_ssd_CSI.txt</code>.</p><blockquote>Both cameras are configured to run at <strong>30 FPS with 1280x720 </strong>resolution. </blockquote><h3 id="execute-the-application">Execute the application</h3><p>To execute the Object Detection application using the USB camera, run:</p><pre><code class="language-bash">deepstream-app -c deepstream_app_config_ssd_USB.txt
+</code></pre><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>DeepStream detector @16 FPS with the USB Camera</figcaption></figure><p>The application will print the FPS in the terminal, it's <strong>~16 FPS. </strong>This result is very similar to the TensorRT Python <a href="https://havedatawilltrain.com/three-threads-to-perdido/">implementation</a> where we had achieved 15 FPS in a simple Python while loop. </p><p>So what's the fuzz about DeepStream?</p><p>In a closer look, we can tell there is a substantial difference. The <code>tegrastats</code> output shows an semi-utilized GPU (~50%) and an under utilized CPU (~25%).</p><figure class="kg-card kg-image-card"></figure><p>The USB camera throughput is the obvious bottleneck in this pipeline. The Jetson TX2 <a href="https://developer.nvidia.com/embedded/jetson-tx2-developer-kit">development kit </a>comes with an on board 5 MP Fixed Focus MIPI CSI Camera out of the box.</p><p>The Camera Serial Interface (CSI) is a specification of the Mobile Industry Processor Interface (MIPI) Alliance. It defines an interface between a camera and a host processor. This means that the CSI camera can move the data in the GPU faster than the USB port.</p><p>Let's try the CSI camera.</p><pre><code class="language-bash">deepstream-app -c deepstream_app_config_ssd_CSI.txt
+</code></pre><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>DeepStream detector @24 FPS with the CSI Camera</figcaption></figure><p>The average performance now is <strong>~24 FPS. </strong>Note that the theoretical maximum we can get is 30 FPS, since this is the camera frame rate.</p><p>We can see an obvious increase of the system utilization:</p><figure class="kg-card kg-image-card"></figure><p>Let's try running both applications side by side:</p><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><figcaption>~12 FPS for each application</figcaption></figure><p>The GPU now is operating at full capacity.</p><figure class="kg-card kg-image-card"></figure><p>The observed frame rates are <strong>~12 FPS </strong>for each application. Apparently, the <strong>maximum capacity of this GPU is ~24 inferences per second</strong> for this setup.</p><blockquote><em>Note: NVIDIA advertises <a href="https://developer.nvidia.com/deepstream-sdk">t</a>hat a DeepStream ResNet-based object<br />detector application can handle<strong> concurrently 14 independent 1080p 30fps </strong>video streams on a TX2. Here we see that <strong>this is far from true</strong> when using an industry standard detection model like SSD Inception V2 COCO.</em></blockquote><p><strong>What have we achieved: </strong><u>We've explored an optimized streaming Object Detection application pipeline using the DeepStream SDK and we've achieved the maximum detection throughput possible, as defined by the device's hardware limits.</u></p>
 
             </section>
 
