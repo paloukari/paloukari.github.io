@@ -9,7 +9,7 @@
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=6159063fd2" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=0e20e39eaa" />
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
     <link rel="canonical" href="https://havedatawilltrain.com/drama-of-entropy/" />
@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com/drama-of-entropy/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2019/09/Electrical-poles-2.jpg" />
     <meta property="article:published_time" content="2019-09-30T20:17:07.000Z" />
-    <meta property="article:modified_time" content="2019-10-10T18:37:46.000Z" />
+    <meta property="article:modified_time" content="2020-04-06T16:32:53.000Z" />
     <meta property="article:tag" content="Jetson Nano" />
     <meta property="article:tag" content="Jetson TX2" />
     <meta property="article:tag" content="Remote Debugging" />
@@ -55,7 +55,11 @@
     "publisher": {
         "@type": "Organization",
         "name": "HAVE DATA - WILL TRAIN",
-        "logo": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
     },
     "author": {
         "@type": "Person",
@@ -75,7 +79,7 @@
     "headline": "Drama of entropy",
     "url": "https://havedatawilltrain.com/drama-of-entropy/",
     "datePublished": "2019-09-30T20:17:07.000Z",
-    "dateModified": "2019-10-10T18:37:46.000Z",
+    "dateModified": "2020-04-06T16:32:53.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2019/10/Electrical-poles.jpg",
@@ -91,7 +95,7 @@
 }
     </script>
 
-    <meta name="generator" content="Ghost 2.31" />
+    <meta name="generator" content="Ghost 3.12" />
     <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
@@ -102,6 +106,9 @@
 
   gtag('config', 'UA-148729349-1');
 </script>
+
+<!-- link tag -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" />
 
 </head>
 <body class="post-template tag-jetson-nano tag-jetson-tx2 tag-remote-debugging tag-vscode tag-arm tag-docker tag-containers">
@@ -167,7 +174,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
 
             <section class="post-full-content">
                 <div class="post-content">
-                    <p>I used to mess up my development environment over time by installing all the different experimentation dependencies. This is why I decided to switch to Docker containers.</p><p>The <strong>Jetson Nano </strong>default image comes with Docker runtime pre-installed. To package your app and avoid polluting your device OS with various dependencies, you can use Docker containers as development environments.</p><p>In fact, using a container as a development environment is a very similar to using directly a Jetson device for remote development. <a href="https://havedatawilltrain.com/got-nano-will-code/">Here's my post</a> on how to do the latter.</p><!--kg-card-begin: hr--><hr><!--kg-card-end: hr--><h2 id="remote-debugging-inside-a-container-running-on-a-jetson-device">Remote Debugging inside a Container running on a Jetson Device</h2><p></p><p>The <strong><a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-Container-Runtime-on-Jetson">NVIDIA Container Runtime on Jetson</a> </strong>repo<strong> </strong>has great information on how to use GPU accelerated containers in both the Jetson family, and an X64 workstation.</p><p>Once you choose what's your base container, you'll need to setup a few more things. </p><p>You can either clone <strong><a href="https://github.com/paloukari/jetson-detectors">this repo</a></strong> that contains all the below code, or start from scratch. The assumed file structure of all the following code is:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/10/image-2.png" class="kg-image"></figure><!--kg-card-end: image--><blockquote><strong>/keys: </strong>Here's where I keep my public ssh key.<br><strong>/.vscode:</strong> Here's where I keep my debugging configuration.<br><strong>/docker: </strong>Inside the <strong>docker </strong>folder I put the container definitions.<br><strong>/src: </strong>Here's the application source code.</blockquote><h3 id="-keys">/keys</h3><p>You will need to setup a passwordless ssh between your host's VSCode and the container. To do this, you'll need to copy your ssh public key in the container's <code>authorized_keys</code> file. To get your public ssh key, run:<code>cat ~/.ssh/id_rsa.pub</code>. Copy the key value in the <code>id_rsa.pub</code> key file that's inside the /keys folder.</p><blockquote>My host is a Windows 10 machine and I generally make sure that my Windows and WSL keys are the same. To do this, I've copied my keys from <code>~/.ssh/</code> to <code>/mnt/c/users/[YOUR USERNAME]/.ssh</code>/. This way I get a convenience security symmetry.</blockquote><h3 id="-vscode">/.vscode</h3><p>Here's the my <code>launch.json</code> and how to setup an X Server for forwarding any GUI running on the container to your host (<a href="https://havedatawilltrain.com/got-nano-will-code/">here's</a> more information how to set this up)</p><!--kg-card-begin: markdown--><pre><code>{    
+                    <p>I used to mess up my development environment over time by installing all the different experimentation dependencies. This is why I decided to switch to Docker containers.</p><p>The <strong>Jetson Nano </strong>default image comes with Docker runtime pre-installed. To package your app and avoid polluting your device OS with various dependencies, you can use Docker containers as development environments.</p><p>In fact, using a container as a development environment is a very similar to using directly a Jetson device for remote development. <a href="/got-nano-will-code/">Here's my post</a> on how to do the latter.</p><hr><h2 id="remote-debugging-inside-a-container-running-on-a-jetson-device">Remote Debugging inside a Container running on a Jetson Device</h2><p></p><p>The <strong><a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-Container-Runtime-on-Jetson">NVIDIA Container Runtime on Jetson</a> </strong>repo<strong> </strong>has great information on how to use GPU accelerated containers in both the Jetson family, and an X64 workstation.</p><p>Once you choose what's your base container, you'll need to setup a few more things. </p><p>You can either clone <strong><a href="https://github.com/paloukari/jetson-detectors">this repo</a></strong> that contains all the below code, or start from scratch. The assumed file structure of all the following code is:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/10/image-2.png" class="kg-image"></figure><blockquote><strong>/keys: </strong>Here's where I keep my public ssh key.<br><strong>/.vscode:</strong> Here's where I keep my debugging configuration.<br><strong>/docker: </strong>Inside the <strong>docker </strong>folder I put the container definitions.<br><strong>/src: </strong>Here's the application source code.</blockquote><h3 id="-keys">/keys</h3><p>You will need to setup a passwordless ssh between your host's VSCode and the container. To do this, you'll need to copy your ssh public key in the container's <code>authorized_keys</code> file. To get your public ssh key, run:<code>cat ~/.ssh/id_rsa.pub</code>. Copy the key value in the <code>id_rsa.pub</code> key file that's inside the /keys folder.</p><blockquote>My host is a Windows 10 machine and I generally make sure that my Windows and WSL keys are the same. To do this, I've copied my keys from <code>~/.ssh/</code> to <code>/mnt/c/users/[YOUR USERNAME]/.ssh</code>/. This way I get a convenience security symmetry.</blockquote><h3 id="-vscode">/.vscode</h3><p>Here's the my <code>launch.json</code> and how to setup an X Server for forwarding any GUI running on the container to your host (<a href="https://havedatawilltrain.com/got-nano-will-code/">here's</a> more information how to set this up)</p><!--kg-card-begin: markdown--><pre><code>{    
     &quot;version&quot;: &quot;0.2.0&quot;,
     &quot;configurations&quot;: [
         {
@@ -220,7 +227,7 @@ sudo docker build . -f ./docker/Dockerfile.cpu -t object-detection-cpu
 # Run the container
 sudo docker run --rm --runtime nvidia --privileged -ti -e DISPLAY=$DISPLAY -v &quot;$PWD&quot;:/src -p 32001:22 object-detection-cpu
 </code></pre>
-<!--kg-card-end: markdown--><p>In your host's VSCode, add this information in the Remote-SSH configuration file:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-6.png" class="kg-image"></figure><!--kg-card-end: image--><!--kg-card-begin: markdown--><pre><code>Host Nano
+<!--kg-card-end: markdown--><p>In your host's VSCode, add this information in the Remote-SSH configuration file:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-6.png" class="kg-image"></figure><!--kg-card-begin: markdown--><pre><code>Host Nano
     User spyros
     HostName spyros-nano2
     IdentityFile ~/.ssh/id_rsa
@@ -232,7 +239,7 @@ Host NanoContainer
     Port 32001
 
 </code></pre>
-<!--kg-card-end: markdown--><p>Now, you should be able to connect to the NanoContainer Remote SSH host. Last step is to install the Python VSCode extension on the remote host. </p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com/content/images/2019/09/image-8.png" class="kg-image"><figcaption>The VSCode extensions need to be installed in both machines in a Remote-SSH session</figcaption></figure><!--kg-card-end: image--><p>Open the <code>xtest.py</code> and fit F5. </p><blockquote>You need to install the eog app in the container.</blockquote><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/10/ezgif-5-44d36401c343.gif" class="kg-image"></figure><!--kg-card-end: image--><p><strong>What we achieved: </strong><u>We can now do remote development from a Windows host to a container running on a Jetson Nano, using VSCode.</u></p>
+<!--kg-card-end: markdown--><p>Now, you should be able to connect to the NanoContainer Remote SSH host. Last step is to install the Python VSCode extension on the remote host. </p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com/content/images/2019/09/image-8.png" class="kg-image"><figcaption>The VSCode extensions need to be installed in both machines in a Remote-SSH session</figcaption></figure><p>Open the <code>xtest.py</code> and fit F5. </p><blockquote>You need to install the eog app in the container.</blockquote><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/10/ezgif-5-44d36401c343.gif" class="kg-image"></figure><p><strong>What we achieved: </strong><u>We can now do remote development from a Windows host to a container running on a Jetson Nano, using VSCode.</u></p>
                 </div>
             </section>
 
@@ -444,7 +451,7 @@ Host NanoContainer
 
         <footer class="site-footer outer">
             <div class="site-footer-content inner">
-                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2019</section>
+                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
                 <nav class="site-footer-nav">
                     <a href="https://havedatawilltrain.com">Latest Posts</a>
                     <a href="https://www.linkedin.com/in/spirosgarifallos/" target="_blank" rel="noopener">LinkedIn</a>
@@ -473,7 +480,7 @@ Host NanoContainer
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous">
     </script>
-    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=6159063fd2"></script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=0e20e39eaa"></script>
 
 
     <script>
@@ -542,7 +549,10 @@ $(document).ready(function () {
 </script>
 
 
-    
+    <!-- script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-csharp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-python.min.js"></script>
 
 </body>
 </html>

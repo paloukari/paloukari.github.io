@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>The Waiting Loop</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=0e20e39eaa" />
+
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://havedatawilltrain.com/the-waiting-loop/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="amphtml" href="https://havedatawilltrain.com/the-waiting-loop/amp/" />
+    
+    <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Waiting Loop" />
+    <meta property="og:description" content="This is the third post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the telemetry pump." />
+    <meta property="og:url" content="https://havedatawilltrain.com/the-waiting-loop/" />
+    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/penguins-1.jpg" />
+    <meta property="article:published_time" content="2020-04-04T00:48:28.000Z" />
+    <meta property="article:modified_time" content="2020-04-06T16:27:37.000Z" />
+    <meta property="article:tag" content="Azure IoT Edge" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Waiting Loop" />
+    <meta name="twitter:description" content="This is the third post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the telemetry pump." />
+    <meta name="twitter:url" content="https://havedatawilltrain.com/the-waiting-loop/" />
+    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2020/04/penguins-1.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Spyros Garyfallos" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Azure IoT Edge" />
+    <meta name="twitter:site" content="@SpyrosCarnation" />
+    <meta name="twitter:creator" content="@SpyrosCarnation" />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1080" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "HAVE DATA - WILL TRAIN",
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Spyros Garyfallos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/09/Capture.PNG",
+            "width": 375,
+            "height": 439
+        },
+        "url": "https://havedatawilltrain.com/author/spyros/",
+        "sameAs": [
+            "https://www.facebook.com/spyros.garyfallos",
+            "https://twitter.com/SpyrosCarnation"
+        ]
+    },
+    "headline": "The Waiting Loop",
+    "url": "https://havedatawilltrain.com/the-waiting-loop/",
+    "datePublished": "2020-04-04T00:48:28.000Z",
+    "dateModified": "2020-04-06T16:27:37.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://havedatawilltrain.com/content/images/2020/04/penguins-1.jpg",
+        "width": 1920,
+        "height": 1080
+    },
+    "keywords": "Azure IoT Edge",
+    "description": "This is the third post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the telemetry pump.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://havedatawilltrain.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 3.12" />
+    <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-148729349-1');
+</script>
+
+<!-- link tag -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" />
+
+</head>
+<body class="post-template tag-azure-iot-edge">
+
+    <div class="site-wrapper">
+
+        
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+                <a class="site-nav-logo" href="https://havedatawilltrain.com"><img src="/content/images/2019/07/Logo2.png" alt="HAVE DATA - WILL TRAIN" /></a>
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="https://havedatawilltrain.com/">Home</a></li>
+    <li class="nav-author" role="menuitem"><a href="https://havedatawilltrain.com/author/spyros/">Author</a></li>
+</ul>
+
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+                <a class="social-link social-link-fb" href="https://www.linkedin.com/in/spirosgarifallos/" title="Linkedin" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+width="26" height="26"
+viewBox="0 0 192 192"
+style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,192v-192h192v192z" fill="none"></path><g fill="#ffffff"><g id="surface1"><path d="M156,0h-120c-19.875,0 -36,16.125 -36,36v120c0,19.875 16.125,36 36,36h120c19.875,0 36,-16.125 36,-36v-120c0,-19.875 -16.125,-36 -36,-36zM59.36539,162.98077h-29.82693l-0.17307,-89.30769h29.82692zM43.70192,61.99038h-0.17308c-9.75,0 -16.03846,-6.72115 -16.03846,-15.08653c0,-8.56731 6.49039,-15.0577 16.41347,-15.0577c9.92308,0 16.00961,6.49038 16.21153,15.0577c0,8.36538 -6.31731,15.08653 -16.41346,15.08653zM162.77885,162.98077h-30.08654v-48.51923c0,-11.74039 -3.11538,-19.73077 -13.61538,-19.73077c-8.01923,0 -12.34615,5.39423 -14.42308,10.61538c-0.77885,1.875 -0.98077,4.44231 -0.98077,7.06731v50.56731h-30.23077l-0.17308,-89.30769h30.23077l0.17308,12.60577c3.86538,-5.97116 10.29808,-14.42308 25.70192,-14.42308c19.09616,0 33.37501,12.46154 33.37501,39.25961v51.86539z"></path></g></g></g></svg></a>
+                <a class="social-link social-link-tw" href="https://twitter.com/SpyrosCarnation" title="Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+        </div>
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/https://havedatawilltrain.com/rss/" title="RSS" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+</a>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <article class="post-full post tag-azure-iot-edge ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="2020-04-03">3 April 2020</time>
+                        <span class="date-divider">/</span> <a href="/tag/azure-iot-edge/">Azure IoT Edge</a>
+                </section>
+                <h1 class="post-full-title">The Waiting Loop</h1>
+            </header>
+
+            <figure class="post-full-image">
+                <img
+                    srcset="/content/images/size/w300/2020/04/penguins-1.jpg 300w,
+                            /content/images/size/w600/2020/04/penguins-1.jpg 600w,
+                            /content/images/size/w1000/2020/04/penguins-1.jpg 1000w,
+                            /content/images/size/w2000/2020/04/penguins-1.jpg 2000w"
+                    sizes="(max-width: 800px) 400px,
+                            (max-width: 1170px) 700px,
+                            1400px"
+                    src="/content/images/size/w2000/2020/04/penguins-1.jpg"
+                    alt="The Waiting Loop"
+                />
+            </figure>
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    <p>In IoT, a very common coding pattern is having an endless loop that does some periodic work and emits telemetry based on the work result. In the example we saw in the <a href="/restarted-by-request/">previous post</a>, we used the <code>EmitTelemetryMessagesAsync</code> to simulate a temperature sensor, but in real life, this function would read the value of an actual hardware temperature sensor and send out the temperature telemetry event. From now on, we will call this pattern <strong>telemetry pump.</strong></p><p>The telemetry pump patter  is very old. In fact, every Windows application has a similar pump, but for UI events instead of telemetry events. This pump is the dispatching mechanism of the OS events to your application. Similarly in the IoT context, a telemetry pump acts as the dispatching interface between the hardware sensors and the cloud.</p><h2 id="publisher-subscriber">Publisher/Subscriber </h2><p>In an ideal world, a publisher/subscriber pattern that is based on hardware interrupts would be more elegant approach. Nevertheless, <strong>the hardware world is full of uncertainty: </strong>originating in Heisenberg's uncertainty principle, there is always some degree of noise when we try to measure any any physical phenomenon. This means that consecutive measurement values will jitter (try measuring voltage with a high-accuracy voltmeter). For this reason, most of the times we're forced to use <strong>periodical polling </strong>instead of change-driven updates. And depending on the required data resolution, we can come up with the <a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem">required minimum frequency</a>.</p><h2 id="timers">Timers </h2><p>Many design telemetry pumps designs exist, depending on the depth of the technology stack we're working on. The periodical nature of the sensor polling often inspires people to use <a href="https://docs.microsoft.com/en-us/windows/win32/sync/using-timer-queues">timers</a>. Although timers may seem conceptually a suitable and easy approach, timers usually get you in trouble. <u>There is no guarantee that the previous iteration has completed before the timer fires again</u>. Indeed, if for example we're emitting a telemetry message every second, assuming that every iteration of reading the sensor and sending the message takes roughly 300msec to complete, then the invocation callback is guaranteed to complete before the next period starts. </p><p>Graphically, this timeline looks like:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-2.png" class="kg-image"></figure><p>But as we briefly touched on this in a <a href="/the-last-judgment/">previous post</a>, <strong>there is not guarantee of an IO operation duration. </strong>Let's say for example that because of a network glitch, the t+1 callback invocation takes more time to complete:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-3.png" class="kg-image"></figure><p>The danger in this case is that at the cloud side we might end up with <strong>out-of-order messages </strong>that we'll then have to add special care to determine their actual order (we'll see next that we might have to do this either way). But most importantly, because we have parallel execution of the same code, we need to make sure that the code <strong>is thread safe, </strong>in other words, to ensure that we use <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.semaphore?view=netcore-3.1">semaphores</a> when we access shared (heap) memory.</p><p>An even more dangerous case leads to thread poll exhaustion. This can happen when instead of just a network glitch, we run into a network bottleneck that causes significant delay for all callback invocation completion:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-4.png" class="kg-image"></figure><p> In this case, a catastrophic program failure is inevitable.</p><h2 id="task-timer">Task-timer</h2><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/daisyChain2.gif" class="kg-image"></figure><p>An alternative approach that mitigates these issues is to use to <a href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/chaining-tasks-by-using-continuation-tasks">chained tasks</a>. Although this approach might seem initially more complex, in reality is very straight forward. In C#, a <a href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task </a>can have a continuation Task, which simply is another task that starts right after the former completes. By chaining together multiple callback invocation tasks and with adding the necessary <code>Task.Delay</code> between them, we can have the same periodical behavior as before:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-5.png" class="kg-image"></figure><p> Going back to the previous network glitch scenario, the chained tasks will never produce any thread-unsafe or out-of-order messages cases, but rather just a period drift in just a single iteration:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-6.png" class="kg-image"></figure><p> The downside with this approach is that we lose our polling periodicity. </p><p>A task-timer implementation, as described above, is the code snippet below:</p><pre><code class="language-csharp">using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class TaskTimer
+{
+    CancellationTokenSource cancellationTokenSource;
+    TimeSpan timerPeriod;
+    Action onElapsedCallback;
+    bool continueOnError;
+
+    public TaskTimer(Action onElapsedCallback,
+        TimeSpan timerPeriod,
+        CancellationTokenSource cancellationTokenSource,
+        bool continueOnError = true)
+    {
+        this.cancellationTokenSource = cancellationTokenSource;
+        this.timerPeriod = timerPeriod;
+        this.onElapsedCallback = onElapsedCallback;
+        this.continueOnError = continueOnError;
+    }
+
+    public void Start()
+    {
+        Task elapsedTask = null;
+        elapsedTask = new Task((x) =&gt;
+        {
+            Elapsed(elapsedTask, cancellationTokenSource);
+        }, cancellationTokenSource.Token);
+
+        HandleError(elapsedTask);
+
+        elapsedTask.Start();
+    }
+
+    private void Elapsed(Task task, object objParam)
+    {
+        var start = DateTime.Now;
+        var cancellationTokenSource = (CancellationTokenSource)objParam;
+        if (cancellationTokenSource.Token.IsCancellationRequested)
+        {
+            Console.WriteLine("TaskTimer: A cancellation has been requested.");
+            return;
+        }
+
+        onElapsedCallback();
+
+        var delay = timerPeriod - (DateTime.Now - start);
+        if (delay.Ticks &gt; 0)
+        {
+            task = Task.Delay(delay);
+        }
+        HandleError(task.ContinueWith(Elapsed, cancellationTokenSource));
+    }
+
+    private void HandleError(Task task)
+    {
+        task.ContinueWith((e) =&gt;
+        {
+            Console.WriteLine(
+                $"Exception when running timer callback: {e.Exception}");
+            if (!continueOnError)
+                cancellationTokenSource.Cancel();
+            else
+                task.ContinueWith(Elapsed, cancellationTokenSource);
+        }, TaskContinuationOptions.OnlyOnFaulted);
+    }
+}</code></pre><p><u>A few of notes about this <code>TaskTimer</code>: </u></p><p>The endless task-chaining is achieved by creating a <code>Task</code> with execution entry point the <code>Elapsed</code> method (our callback) and by passing a reference of this task in the <code>Task</code> entry point arguments:</p><pre><code class="language-csharp">Task elapsedTask = null;
+elapsedTask = new Task((x) =&gt;
+{
+	Elapsed(elapsedTask, cancellationTokenSource);
+}, cancellationTokenSource.Token);</code></pre><p>Next, inside this <code>Elapsed</code> method, we continue the argument task with the same method:</p><pre><code class="language-csharp">task.ContinueWith(Elapsed, cancellationTokenSource)</code></pre><p>Between each continuation task, a delay might be added, based on the duration of the last iteration and the configured period:</p><pre><code class="language-csharp">var delay = timerPeriod - (DateTime.Now - start);
+if (delay.Ticks &gt; 0)
+{
+    task = Task.Delay(delay);
+}</code></pre><p>This implementation will break the task-chaining if the passed <code>CancelationToken</code> signals a cancelation:</p><pre><code class="language-csharp">if (cancellationTokenSource.Token.IsCancellationRequested)
+{
+    Console.WriteLine("TaskTimer: A cancellation has been requested.");
+    return;
+}</code></pre><p>Finally, the task-timer will trigger a cancelation signal if an exception is thrown by the callback, and the <code>continueOnError</code> is set to <code>false</code>:</p><pre><code class="language-csharp">private void HandleError(Task task)
+{
+    task.ContinueWith((e) =&gt;
+    {
+		Console.WriteLine(
+            $"Exception when running timer callback: {e.Exception}");
+        if (!continueOnError)
+	        cancellationTokenSource.Cancel();
+        else
+    	    task.ContinueWith(Elapsed, cancellationTokenSource);
+    }, TaskContinuationOptions.OnlyOnFaulted);
+}</code></pre><p>Let's see now how our sample temperature module evolves using the this <code>TaskTimer</code>:</p><pre><code class="language-csharp">using System;
+using System.Runtime.Loader;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Example4
+{
+    class Program
+    {
+        // This is the program entry point
+        static async Task Main(string[] args)
+        {
+            // Create the cancelation token source
+            var cancellationTokenSource = new CancellationTokenSource();
+            AssemblyLoadContext.Default.Unloading +=
+                (cts) =&gt; cancellationTokenSource.Cancel();
+
+            Console.CancelKeyPress +=
+                (sender, cts) =&gt;
+                {
+                    Console.WriteLine("Ctrl+C detected.");
+                    cts.Cancel = true;
+                    cancellationTokenSource.Cancel();
+                };
+
+            // Register the Reset command callback 
+            await RegisterCommandCallbackAsync("Reset",
+                OnReset,
+                cancellationTokenSource.Token);
+
+            // Create and start the TaskTimer
+            TaskTimer taskTimer = new TaskTimer(
+                EmitTelemetryMessage,
+                TimeSpan.FromSeconds(1), cancellationTokenSource);
+
+            // A non-blocking call to start the task-timer
+            taskTimer.Start();
+
+            // Wait until the app unloads or gets cancelled
+            await WhenCancelled(cancellationTokenSource.Token);
+
+            // Let the other threads drain
+            Console.WriteLine("Waiting for 2 seconds..");
+            await Task.Delay(2 * 1000);
+
+            Console.WriteLine("Exiting..");
+        }
+
+        public static Task WhenCancelled(CancellationToken cancellationToken)
+        {
+            var taskCompletionSource = new TaskCompletionSource&lt;bool&gt;();
+            cancellationToken.Register(
+                s =&gt; ((TaskCompletionSource&lt;bool&gt;)s).SetResult(true),
+                taskCompletionSource);
+            return taskCompletionSource.Task;
+        }
+        private static async Task RegisterCommandCallbackAsync(string command,
+            Action callback,
+            CancellationToken cancellationToken)
+        {
+            // Perform the command registration
+            // Code omitted
+            return;
+        }
+
+        // A method exposed for RPC
+        static void OnReset()
+        {
+            // Perform a temperature sensor reset
+            // Code omitted
+        }
+
+        // Emit telemetry message
+        static void EmitTelemetryMessage()
+        {
+            Console.WriteLine($"Sending telemetry message..");
+        }
+    }
+}
+</code></pre><p>Arguably, this version is more readable and at the same time, we've avoided all aforementioned pitfalls. Running this version now produces a similar output as before:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/task-timer.gif" class="kg-image"></figure><p>So far, we've been using the <code>Console.WriteLine</code> function to print messages and we've avoided reading any application configuration. In the next post, we'll examine the best approaches on these topics.</p>
+                </div>
+            </section>
+
+
+            <footer class="post-full-footer">
+
+
+                    
+<section class="author-card">
+        <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+    <section class="author-card-content">
+        <h4 class="author-card-name"><a href="/author/spyros/">Spyros Garyfallos</a></h4>
+            <p>Read <a href="/author/spyros/">more posts</a> by this author.</p>
+    </section>
+</section>
+<div class="post-full-footer-right">
+    <a class="author-card-button" href="/author/spyros/">Read More</a>
+</div>
+
+
+            </footer>
+
+            
+            <section class="post-full-comments">
+                <div id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function () {
+                        this.page.url = "https://havedatawilltrain.com/the-waiting-loop/";  
+                        this.page.identifier = "ghost-5e860b6b188f260074a3084e"
+                    };
+                    (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://have-data-will-train.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            </section>
+            
+
+        </article>
+
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+                <article class="read-next-card"
+                            style="background-image: url(/content/images/size/w600/2019/07/blog-cover2.jpg)"
+                >
+                    <header class="read-next-card-header">
+                        <small class="read-next-card-header-sitetitle">&mdash; HAVE DATA - WILL TRAIN &mdash;</small>
+                        <h3 class="read-next-card-header-title"><a href="/tag/azure-iot-edge/">Azure IoT Edge</a></h3>
+                    </header>
+                    <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
+</div>
+                    <div class="read-next-card-content">
+                        <ul>
+                            <li><a href="/restarted-by-request/">Restarted by request</a></li>
+                            <li><a href="/the-last-judgment/">The Last Judgment</a></li>
+                        </ul>
+                    </div>
+                    <footer class="read-next-card-footer">
+                        <a href="/tag/azure-iot-edge/">See all 2 posts →</a>
+                    </footer>
+                </article>
+
+
+                <article class="post-card post tag-azure-iot-edge ">
+
+    <a class="post-card-image-link" href="/restarted-by-request/">
+        <img class="post-card-image"
+            srcset="/content/images/size/w300/2020/04/apollo.jpg 300w,
+                    /content/images/size/w600/2020/04/apollo.jpg 600w,
+                    /content/images/size/w1000/2020/04/apollo.jpg 1000w,
+                    /content/images/size/w2000/2020/04/apollo.jpg 2000w"
+            sizes="(max-width: 1000px) 400px, 700px"
+            src="/content/images/size/w600/2020/04/apollo.jpg"
+            alt="Restarted by request"
+        />
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/restarted-by-request/">
+
+            <header class="post-card-header">
+                    <span class="post-card-tags">Azure IoT Edge</span>
+                <h2 class="post-card-title">Restarted by request</h2>
+            </header>
+
+            <section class="post-card-excerpt">
+                <p>This is the second post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of application restarting.</p>
+            </section>
+
+        </a>
+
+        <footer class="post-card-meta">
+
+            <ul class="author-list">
+                <li class="author-list-item">
+
+                    <div class="author-name-tooltip">
+                        Spyros Garyfallos
+                    </div>
+
+                        <a href="/author/spyros/" class="static-avatar">
+                            <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+                        </a>
+                </li>
+            </ul>
+
+            <span class="reading-time">4 min read</span>
+
+        </footer>
+
+    </div>
+
+</article>
+
+        </div>
+    </div>
+</aside>
+
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://havedatawilltrain.com">
+                <img src="/content/images/size/w30/2019/07/icon.png" alt="HAVE DATA - WILL TRAIN icon" />
+            <span>HAVE DATA - WILL TRAIN</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">The Waiting Loop</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=The%20Waiting%20Loop&amp;url=https://havedatawilltrain.com/the-waiting-loop/"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://havedatawilltrain.com/the-waiting-loop/"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+        </a>
+    </div>
+    <progress id="reading-progress" class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="https://havedatawilltrain.com">Latest Posts</a>
+                    <a href="https://www.linkedin.com/in/spirosgarifallos/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://twitter.com/SpyrosCarnation" target="_blank" rel="noopener">Twitter</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <script>
+        var images = document.querySelectorAll('.kg-gallery-image img');
+        images.forEach(function (image) {
+            var container = image.closest('.kg-gallery-image');
+            var width = image.attributes.width.value;
+            var height = image.attributes.height.value;
+            var ratio = width / height;
+            container.style.flex = ratio + ' 1 0%';
+        })
+    </script>
+
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=0e20e39eaa"></script>
+
+
+    <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('#reading-progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+
+});
+</script>
+
+
+    <!-- script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-csharp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-python.min.js"></script>
+
+</body>
+</html>

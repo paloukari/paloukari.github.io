@@ -9,7 +9,7 @@
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=6159063fd2" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=0e20e39eaa" />
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
     <link rel="canonical" href="https://havedatawilltrain.com/got-nano-will-code/" />
@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com/got-nano-will-code/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-4.jpg" />
     <meta property="article:published_time" content="2019-09-25T20:39:41.000Z" />
-    <meta property="article:modified_time" content="2019-10-10T18:37:01.000Z" />
+    <meta property="article:modified_time" content="2020-04-06T16:32:16.000Z" />
     <meta property="article:tag" content="Jetson Nano" />
     <meta property="article:tag" content="Remote Debugging" />
     <meta property="article:tag" content="VSCode" />
@@ -52,7 +52,11 @@
     "publisher": {
         "@type": "Organization",
         "name": "HAVE DATA - WILL TRAIN",
-        "logo": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
     },
     "author": {
         "@type": "Person",
@@ -72,7 +76,7 @@
     "headline": "Got Nano, Wanna Code",
     "url": "https://havedatawilltrain.com/got-nano-will-code/",
     "datePublished": "2019-09-25T20:39:41.000Z",
-    "dateModified": "2019-10-10T18:37:01.000Z",
+    "dateModified": "2020-04-06T16:32:16.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2019/09/Jetson-Nano_3QTR-Front_Left_trimmed-1.jpg",
@@ -88,7 +92,7 @@
 }
     </script>
 
-    <meta name="generator" content="Ghost 2.31" />
+    <meta name="generator" content="Ghost 3.12" />
     <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
@@ -99,6 +103,9 @@
 
   gtag('config', 'UA-148729349-1');
 </script>
+
+<!-- link tag -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" />
 
 </head>
 <body class="post-template tag-jetson-nano tag-remote-debugging tag-vscode tag-arm">
@@ -164,7 +171,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
 
             <section class="post-full-content">
                 <div class="post-content">
-                    <p>So, you just got your Jetson Nano and you're wondering how to get started? In this blog post you'll learn how to setup a remote development environment from your Windows 10 machine to a Jetson device.</p><h2 id="device-setup">Device Setup</h2><p>First, let's start with the device initial setup. To prepare my device, I followed the official <a href="https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro">getting started guide </a>from Nvidia. I used a <a href="https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref=asc_df_B07FCMKK5X/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=309776868400&amp;hvpos=1o1&amp;hvnetw=g&amp;hvrand=8725959158767136122&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=1027744&amp;hvtargid=pla-588455240877&amp;psc=1">128 GB microSD</a> and a <a href="https://www.amazon.com/5V-4000mA-switching-power-supply/dp/B01LY5TG5Y">power adapter</a> to power up my device, along with the <a href="https://www.jetsonhacks.com/2019/04/10/jetson-nano-use-more-power/">required jumper</a>. I connected a Dell P2415Q monitor using an HDMI cable and my USB receiver for my Logitech Triathlon keyboard and mouse. My development laptop is a Windows 10 machine.</p><h2 id="desktop-sharing">Desktop Sharing </h2><p>The desktop sharing app is broken. Follow <a href="https://blog.hackster.io/getting-started-with-the-nvidia-jetson-nano-developer-kit-43aa7c298797">this</a> article to fix it. You can also find instructions there on how to use Microsoft's Remote Desktop.</p><h2 id="development-environment">Development Environment</h2><p>The latest trend of development experience in the software development industry is developing using <strong>CLIs </strong>and <strong>code editors</strong>. I generally enjoy having all moving parts together when I'm coding, or at least in proximity.</p><p><strong>Visual Studio Code</strong> succeeded in combining together a cross-platform code editor, community driven plugins and decent UI/UX for development. But what I really like with Visual Studio Code is the recent <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>capability that allows you to keep a local UI/UX experience, while working on a remote host or container.</p><p>The other thing I like having in my development environment is <strong>idempotency</strong>: not having to deal with the dependencies of the host. <strong>Containers </strong>allow me to have multiple dependency configurations on the same host, and moreover, to share code between different hosts. For this reason, in every code sample I present in this blog, I make sure to include the corresponding container.</p><h3 id="step-1-remote-development-on-a-jetson-nano">Step 1: Remote Development on a Jetson Nano</h3><p>Because the ARM64 architecture is not officially supported yet, to install<strong> Visual Studio Code</strong> on your <strong>Jetson Nano</strong>, for now you'll have to use the <a href="https://code.headmelted.com/">community binaries</a>.</p><p><strong>Installing Visual Studio Code on a Jetson Nano</strong></p><!--kg-card-begin: code--><pre><code class="language-Bash"># Start an elevated session
+                    <p>So, you just got your Jetson Nano and you're wondering how to get started? In this blog post you'll learn how to setup a remote development environment from your Windows 10 machine to a Jetson device.</p><h2 id="device-setup">Device Setup</h2><p>First, let's start with the device initial setup. To prepare my device, I followed the official <a href="https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#intro">getting started guide </a>from Nvidia. I used a <a href="https://www.amazon.com/SanDisk-128GB-Extreme-microSD-Adapter/dp/B07FCMKK5X/ref=asc_df_B07FCMKK5X/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=309776868400&amp;hvpos=1o1&amp;hvnetw=g&amp;hvrand=8725959158767136122&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=1027744&amp;hvtargid=pla-588455240877&amp;psc=1">128 GB microSD</a> and a <a href="https://www.amazon.com/5V-4000mA-switching-power-supply/dp/B01LY5TG5Y">power adapter</a> to power up my device, along with the <a href="https://www.jetsonhacks.com/2019/04/10/jetson-nano-use-more-power/">required jumper</a>. I connected a Dell P2415Q monitor using an HDMI cable and my USB receiver for my Logitech Triathlon keyboard and mouse. My development laptop is a Windows 10 machine.</p><h2 id="desktop-sharing">Desktop Sharing </h2><p>The desktop sharing app is broken. Follow <a href="https://blog.hackster.io/getting-started-with-the-nvidia-jetson-nano-developer-kit-43aa7c298797">this</a> article to fix it. You can also find instructions there on how to use Microsoft's Remote Desktop.</p><h2 id="development-environment">Development Environment</h2><p>The latest trend of development experience in the software development industry is developing using <strong>CLIs </strong>and <strong>code editors</strong>. I generally enjoy having all moving parts together when I'm coding, or at least in proximity.</p><p><strong>Visual Studio Code</strong> succeeded in combining together a cross-platform code editor, community driven plugins and decent UI/UX for development. But what I really like with Visual Studio Code is the recent <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>capability that allows you to keep a local UI/UX experience, while working on a remote host or container.</p><p>The other thing I like having in my development environment is <strong>idempotency</strong>: not having to deal with the dependencies of the host. <strong>Containers </strong>allow me to have multiple dependency configurations on the same host, and moreover, to share code between different hosts. For this reason, in every code sample I present in this blog, I make sure to include the corresponding container.</p><h3 id="step-1-remote-development-on-a-jetson-nano">Step 1: Remote Development on a Jetson Nano</h3><p>Because the ARM64 architecture is not officially supported yet, to install<strong> Visual Studio Code</strong> on your <strong>Jetson Nano</strong>, for now you'll have to use the <a href="https://code.headmelted.com/">community binaries</a>.</p><p><strong>Installing Visual Studio Code on a Jetson Nano</strong></p><pre><code class="language-Bash"># Start an elevated session
 sudo -s
 
 # Install the community repo key
@@ -172,27 +179,27 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0CC3FD642696BFC8
 
 # Run the installation script
 . &lt;( wget -O - https://code.headmelted.com/installers/apt.sh )
-</code></pre><!--kg-card-end: code--><p>If all goes well, you should get this output:</p><!--kg-card-begin: code--><pre><code class="language-Bash">Installation complete!
+</code></pre><p>If all goes well, you should get this output:</p><pre><code class="language-Bash">Installation complete!
 
 You can start code at any time by calling "code-oss" within a terminal.
 
-A shortcut should also now be available in your desktop menus (depending on your distribution).</code></pre><!--kg-card-end: code--><p>Next, you'll need to install the <strong><a href="https://code.visualstudio.com/insiders/">Visual Studio Code Insiders</a> on your host </strong>and install the <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>extension.</p><p>As a final step, you'll need to setup a passwordless SSH between your host and the Nano. To do this, you'll need to create an SSH public-private key pair and configure your device to trust your public key.</p><p>To setup your local SSH key in Windows run:</p><!--kg-card-begin: code--><pre><code class="language-Powershell">Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+A shortcut should also now be available in your desktop menus (depending on your distribution).</code></pre><p>Next, you'll need to install the <strong><a href="https://code.visualstudio.com/insiders/">Visual Studio Code Insiders</a> on your host </strong>and install the <strong><a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development</a> </strong>extension.</p><p>As a final step, you'll need to setup a passwordless SSH between your host and the Nano. To do this, you'll need to create an SSH public-private key pair and configure your device to trust your public key.</p><p>To setup your local SSH key in Windows run:</p><pre><code class="language-Powershell">Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 ssh-keygen -t rsa -b 4096 
-</code></pre><!--kg-card-end: code--><p>The keys will be created here: %USERPROFILE%\.ssh</p><p>To copy your public key to the device:</p><!--kg-card-begin: code--><pre><code class="language-CMD">SET REMOTEHOST=user@device
+</code></pre><p>The keys will be created here: %USERPROFILE%\.ssh</p><p>To copy your public key to the device:</p><pre><code class="language-CMD">SET REMOTEHOST=user@device
 scp %USERPROFILE%\.ssh\id_rsa.pub %REMOTEHOST%:~/tmp.pub
-ssh %REMOTEHOST% "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat ~/tmp.pub &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys &amp;&amp; rm -f ~/tmp.pub"</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+ssh %REMOTEHOST% "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat ~/tmp.pub &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys &amp;&amp; rm -f ~/tmp.pub"</code></pre><!--kg-card-begin: markdown--><blockquote>
 <p>You'll need to replace the value <strong>user@device</strong></p>
 </blockquote>
-<!--kg-card-end: markdown--><p>In you host VSCode, hit F1 and type <em>Remote-SSH: Open Configuration File..</em></p><p>Add your configuration:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">Host Nano
+<!--kg-card-end: markdown--><p>In you host VSCode, hit F1 and type <em>Remote-SSH: Open Configuration File..</em></p><p>Add your configuration:</p><pre><code class="language-Remote-SSH config">Host Nano
     User user
     HostName device
-    IdentityFile ~/.ssh/id_rsa</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+    IdentityFile ~/.ssh/id_rsa</code></pre><!--kg-card-begin: markdown--><blockquote>
 <p>Replace the values <strong>user</strong> and <strong>device</strong></p>
 </blockquote>
-<!--kg-card-end: markdown--><p>Connect to your Nano clicking the low left corner green icon:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-1.png" class="kg-image"></figure><!--kg-card-end: image--><p>Congrats! Once connected, you can open a remote folder and open remote terminals directly in VSCode.</p><h3 id="step-2-x-forwarding">Step 2: X forwarding</h3><p>What about applications that have a GUI? No worries, you can setup an X forwarding from Nano to your host. To do this, I'm using the <a href="https://token2shell.com/x410/"><strong>X410 server</strong></a> for Windows. After installing and running the server, make sure you allow public access.</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-2.png" class="kg-image"></figure><!--kg-card-end: image--><p>All is left to do is to configure the X Forwarding on your Nano device.</p><p>Open a terminal in VSCode (<strong>Ctrl+Shift+`</strong> on Windows) and run:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">export DISPLAY=10.135.62.79:0.0</code></pre><!--kg-card-end: code--><!--kg-card-begin: markdown--><blockquote>
+<!--kg-card-end: markdown--><p>Connect to your Nano clicking the low left corner green icon:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-1.png" class="kg-image"></figure><p>Congrats! Once connected, you can open a remote folder and open remote terminals directly in VSCode.</p><h3 id="step-2-x-forwarding">Step 2: X forwarding</h3><p>What about applications that have a GUI? No worries, you can setup an X forwarding from Nano to your host. To do this, I'm using the <a href="https://token2shell.com/x410/"><strong>X410 server</strong></a> for Windows. After installing and running the server, make sure you allow public access.</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-2.png" class="kg-image"></figure><p>All is left to do is to configure the X Forwarding on your Nano device.</p><p>Open a terminal in VSCode (<strong>Ctrl+Shift+`</strong> on Windows) and run:</p><pre><code class="language-Remote-SSH config">export DISPLAY=10.135.62.79:0.0</code></pre><!--kg-card-begin: markdown--><blockquote>
 <p>Make sure you replace the above IP with your host IP</p>
 </blockquote>
-<!--kg-card-end: markdown--><p> To verify everything works, from the terminal run:</p><!--kg-card-begin: code--><pre><code class="language-Remote-SSH config">eog</code></pre><!--kg-card-end: code--><p>If all goes well, you should see this window:</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-3.png" class="kg-image"></figure><!--kg-card-end: image--><p>To automatically set the remote variable when debugging your app, you can modify your<strong> launch.json </strong>and set the variable there:</p><!--kg-card-begin: code--><pre><code class="language-launch.json">{
+<!--kg-card-end: markdown--><p> To verify everything works, from the terminal run:</p><pre><code class="language-Remote-SSH config">eog</code></pre><p>If all goes well, you should see this window:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2019/09/image-3.png" class="kg-image"></figure><p>To automatically set the remote variable when debugging your app, you can modify your<strong> launch.json </strong>and set the variable there:</p><pre><code class="language-launch.json">{
     "version": "0.2.0",
     "configurations": [
         {
@@ -207,8 +214,8 @@ ssh %REMOTEHOST% "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat ~/t
             }
         }
     ]
-}</code></pre><!--kg-card-end: code--><p>To test all this, create a new python file containing the following code:</p><!--kg-card-begin: code--><pre><code class="language-test.py">import subprocess
-subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <strong>F5 </strong>and you'll get the same development experience, as with your local host, but<strong> running on a remote ARM machine!</strong></p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com/content/images/2019/09/ezgif-5-44d36401c343.gif" class="kg-image"><figcaption>Starting a remote debugging session on Jetson Nano</figcaption></figure><!--kg-card-end: image--><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to a Jetson Nano, using VSCode.</u></p><p>Next, we'll setup the same remote environment, <a href="https://havedatawilltrain.com/drama-of-entropy/">but on a Docker container running on the Jetson device</a>.</p>
+}</code></pre><p>To test all this, create a new python file containing the following code:</p><pre><code class="language-test.py">import subprocess
+subprocess.run(["eog"])</code></pre><p>Now you can hit <strong>F5 </strong>and you'll get the same development experience, as with your local host, but<strong> running on a remote ARM machine!</strong></p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://havedatawilltrain.com/content/images/2019/09/ezgif-5-44d36401c343.gif" class="kg-image"><figcaption>Starting a remote debugging session on Jetson Nano</figcaption></figure><p><strong>What we have achieved: </strong><u>We can now do remote development from a Windows host to a Jetson Nano, using VSCode.</u></p><p>Next, we'll setup the same remote environment, <a href="/drama-of-entropy/">but on a Docker container running on the Jetson device</a>.</p>
                 </div>
             </section>
 
@@ -369,7 +376,7 @@ subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <
 
         <footer class="site-footer outer">
             <div class="site-footer-content inner">
-                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2019</section>
+                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
                 <nav class="site-footer-nav">
                     <a href="https://havedatawilltrain.com">Latest Posts</a>
                     <a href="https://www.linkedin.com/in/spirosgarifallos/" target="_blank" rel="noopener">LinkedIn</a>
@@ -398,7 +405,7 @@ subprocess.run(["eog"])</code></pre><!--kg-card-end: code--><p>Now you can hit <
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous">
     </script>
-    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=6159063fd2"></script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=0e20e39eaa"></script>
 
 
     <script>
@@ -467,7 +474,10 @@ $(document).ready(function () {
 </script>
 
 
-    
+    <!-- script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-csharp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-python.min.js"></script>
 
 </body>
 </html>
