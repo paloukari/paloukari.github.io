@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html ⚡>
+<head>
+    <meta charset="utf-8">
+
+    <title>The Reasonable Man</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://havedatawilltrain.com/invasion/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Reasonable Man" />
+    <meta property="og:description" content="So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT" />
+    <meta property="og:url" content="https://havedatawilltrain.com/invasion/" />
+    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" />
+    <meta property="article:published_time" content="2020-04-16T21:52:33.000Z" />
+    <meta property="article:modified_time" content="2020-04-16T21:52:33.000Z" />
+    <meta property="article:tag" content="Azure IoT Edge" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Reasonable Man" />
+    <meta name="twitter:description" content="So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT" />
+    <meta name="twitter:url" content="https://havedatawilltrain.com/invasion/" />
+    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Spyros Garyfallos" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Azure IoT Edge" />
+    <meta name="twitter:site" content="@SpyrosCarnation" />
+    <meta name="twitter:creator" content="@SpyrosCarnation" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="570" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "HAVE DATA - WILL TRAIN",
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Spyros Garyfallos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/09/Capture.PNG",
+            "width": 375,
+            "height": 439
+        },
+        "url": "https://havedatawilltrain.com/author/spyros/",
+        "sameAs": [
+            "https://www.facebook.com/spyros.garyfallos",
+            "https://twitter.com/SpyrosCarnation"
+        ]
+    },
+    "headline": "The Reasonable Man",
+    "url": "https://havedatawilltrain.com/invasion/",
+    "datePublished": "2020-04-16T21:52:33.000Z",
+    "dateModified": "2020-04-16T21:52:33.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://havedatawilltrain.com/content/images/2020/04/masks.jpg",
+        "width": 570,
+        "height": 570
+    },
+    "keywords": "Azure IoT Edge",
+    "description": "So far, in this mini-series we have explored various approaches on some standard\nissues that every IoT Edge application needs to address. In this post we will\nstart exploring the big picture, a complete example that is production-ready and\nthat can act as a good starting point the Azure IoT Edge application\ndevelopement.\n\nIn the previous posts we meticulously avoided introducing any\ntechnology-specific dependencies in our evolving thermostat application example,\neither by temporarily omitting th",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://havedatawilltrain.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 3.12" />
+    <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,600,400" />
+    <style amp-custom>html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{margin:0.67em 0;font-size:2em}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}amp-img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace, monospace;font-size:1em}button,input,optgroup,select,textarea{margin:0;color:inherit;font:inherit}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{margin:0 2px;padding:0.35em 0.625em 0.75em;border:1px solid #c0c0c0}legend{padding:0;border:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-spacing:0;border-collapse:collapse}td,th{padding:0}html{max-height:100%;height:100%;font-size:62.5%;-webkit-tap-highlight-color:rgba(0, 0, 0, 0)}body{max-height:100%;height:100%;color:#3a4145;background:#f4f8fb;letter-spacing:0.01rem;font-family:"Merriweather", serif;font-size:1.8rem;line-height:1.75em;text-rendering:geometricPrecision;-webkit-font-feature-settings:"kern" 1;-moz-font-feature-settings:"kern" 1;-o-font-feature-settings:"kern" 1}::-moz-selection{background:#d6edff}::selection{background:#d6edff}h1,h2,h3,h4,h5,h6{margin:0 0 0.3em 0;color:#2e2e2e;font-family:"Open Sans", sans-serif;line-height:1.15em;text-rendering:geometricPrecision;-webkit-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1;-moz-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1;-o-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1}h1{text-indent:-2px;letter-spacing:-1px;font-size:2.6rem}h2{letter-spacing:0;font-size:2.4rem}h3{letter-spacing:-0.6px;font-size:2.1rem}h4{font-size:1.9rem}h5{font-size:1.8rem}h6{font-size:1.8rem}a{color:#4a4a4a}a:hover{color:#111}p,ul,ol,dl{margin:0 0 2.5rem 0;font-size:1.5rem;text-rendering:geometricPrecision;-webkit-font-feature-settings:"liga" 1, "onum" 1, "kern" 1;-moz-font-feature-settings:"liga" 1, "onum" 1, "kern" 1;-o-font-feature-settings:"liga" 1, "onum" 1, "kern" 1}ol,ul{padding-left:2em}ol ol,ul ul,ul ol,ol ul{margin:0 0 0.4em 0;padding-left:2em}dl dt{float:left;clear:left;overflow:hidden;margin-bottom:1em;width:180px;text-align:right;text-overflow:ellipsis;white-space:nowrap;font-weight:700}dl dd{margin-bottom:1em;margin-left:200px}li{margin:0.4em 0}li li{margin:0}hr{display:block;margin:1.75em 0;padding:0;height:1px;border:0;border-top:#efefef 1px solid}blockquote{box-sizing:border-box;margin:1.75em 0 1.75em 0;padding:0 0 0 1.75em;border-left:#4a4a4a 0.4em solid;-moz-box-sizing:border-box}blockquote p{margin:0.8em 0;font-style:italic}blockquote small{display:inline-block;margin:0.8em 0 0.8em 1.5em;color:#ccc;font-size:0.9em}blockquote small:before{content:"\2014 \00A0"}blockquote cite{font-weight:700}blockquote cite a{font-weight:normal}mark{background-color:#fdffb6}code,tt{padding:1px 3px;border:#e3edf3 1px solid;background:#f7fafb;border-radius:2px;white-space:pre-wrap;font-family:Inconsolata, monospace, sans-serif;font-size:0.85em;font-feature-settings:"liga" 0;-webkit-font-feature-settings:"liga" 0;-moz-font-feature-settings:"liga" 0}pre{overflow:auto;box-sizing:border-box;margin:0 0 1.75em 0;padding:10px;width:100%;border:#e3edf3 1px solid;background:#f7fafb;border-radius:3px;white-space:pre;font-family:Inconsolata, monospace, sans-serif;font-size:0.9em;-moz-box-sizing:border-box}pre code,pre tt{padding:0;border:none;background:transparent;white-space:pre-wrap;font-size:inherit}kbd{display:inline-block;margin-bottom:0.4em;padding:1px 8px;border:#ccc 1px solid;background:#f4f4f4;border-radius:4px;box-shadow:0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 0 #fff inset;color:#666;text-shadow:#fff 0 1px 0;font-size:0.9em;font-weight:700}table{box-sizing:border-box;margin:1.75em 0;max-width:100%;width:100%;background-color:transparent;-moz-box-sizing:border-box}table th,table td{padding:8px;border-top:#efefef 1px solid;vertical-align:top;text-align:left;line-height:20px}table th{color:#000}table caption + thead tr:first-child th,table caption + thead tr:first-child td,table colgroup + thead tr:first-child th,table colgroup + thead tr:first-child td,table thead:first-child tr:first-child th,table thead:first-child tr:first-child td{border-top:0}table tbody + tbody{border-top:#efefef 2px solid}table table table{background-color:#fff}table tbody > tr:nth-child(odd) > td,table tbody > tr:nth-child(odd) > th{background-color:#f6f6f6}table.plain tbody > tr:nth-child(odd) > td,table.plain tbody > tr:nth-child(odd) > th{background:transparent}iframe,amp-iframe,.fluid-width-video-wrapper{display:block;margin:1.75em 0}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper amp-iframe{margin:0}textarea,select,input{margin:0 0 5px 0;padding:6px 9px;width:260px;outline:0;border:#e7eef2 1px solid;background:#fff;border-radius:4px;box-shadow:none;font-family:"Open Sans", sans-serif;font-size:1.6rem;line-height:1.4em;font-weight:100;-webkit-appearance:none}textarea{min-width:250px;min-height:80px;max-width:340px;width:100%;height:auto}input[type="text"]:focus,input[type="email"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="url"]:focus,input[type="password"]:focus,input[type="number"]:focus,input[type="date"]:focus,input[type="month"]:focus,input[type="week"]:focus,input[type="time"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,textarea:focus{outline:none;outline-width:0;border:#bbc7cc 1px solid;background:#fff}select{width:270px;height:30px;line-height:30px}.clearfix:before,.clearfix:after{content:" ";display:table}.clearfix:after{clear:both}.clearfix{zoom:1}.main-header{position:relative;display:table;overflow:hidden;box-sizing:border-box;width:100%;height:50px;background:#5ba4e5 no-repeat center center;background-size:cover;text-align:left;-webkit-box-sizing:border-box;-moz-box-sizing:border-box}.content{background:#fff;padding-top:15px}.blog-title,.content{margin:auto;max-width:600px}.blog-title a{display:block;padding-right:16px;padding-left:16px;height:50px;color:#fff;text-decoration:none;font-family:"Open Sans", sans-serif;font-size:16px;line-height:50px;font-weight:600}.post{position:relative;margin-top:0;margin-right:16px;margin-left:16px;padding-bottom:0;max-width:100%;border-bottom:#ebf2f6 1px solid;word-wrap:break-word;font-size:0.95em;line-height:1.65em}.post-header{margin-bottom:1rem}.post-title{margin-bottom:0}.post-title a{text-decoration:none}.post-meta{display:block;margin:3px 0 0 0;color:#9eabb3;font-family:"Open Sans", sans-serif;font-size:1.3rem;line-height:2.2rem}.post-meta a{color:#9eabb3;text-decoration:none}.post-meta a:hover{text-decoration:underline}.post-meta .author{margin:0;font-size:1.3rem;line-height:1.3em}.post-date{display:inline-block;text-transform:uppercase;white-space:nowrap;font-size:1.2rem;line-height:1.2em}.post-image{margin:0;padding-top:3rem;padding-bottom:30px;border-top:1px #E8E8E8 solid}.post-content amp-img,.post-content amp-anim{position:relative;left:50%;display:block;padding:0;min-width:0;max-width:112%;width:calc(100% + 32px);height:auto;transform:translateX(-50%);-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%)}.footnotes{font-size:1.3rem;line-height:1.6em;font-style:italic}.footnotes li{margin:0.6rem 0}.footnotes p{margin:0}.footnotes p a:last-child{text-decoration:none}.site-footer{position:relative;margin:0 auto 20px auto;padding:1rem 15px;max-width:600px;color:rgba(0,0,0,0.5);font-family:"Open Sans", sans-serif;font-size:1.1rem;line-height:1.75em}.site-footer a{color:rgba(0,0,0,0.5);text-decoration:none;font-weight:bold}.site-footer a:hover{border-bottom:#bbc7cc 1px solid}.poweredby{display:block;float:right;width:45%;text-align:right}.copyright{display:block;float:left;width:45%}</style>
+
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+    <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+
+</head>
+
+<body class="amp-template">
+    <header class="main-header">
+        <nav class="blog-title">
+            <a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a>
+        </nav>
+    </header>
+
+    <main class="content" role="main">
+        <article class="post">
+
+            <header class="post-header">
+                <h1 class="post-title">The Reasonable Man</h1>
+                <section class="post-meta">
+                    <p class="author">by <a href="/author/spyros/">Spyros Garyfallos</a></p>
+                    <time class="post-date" datetime="2020-04-16">2020-04-16</time>
+                </section>
+            </header>
+            <figure class="post-image">
+                <amp-img src="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" width="600" height="400" layout="responsive"></amp-img>
+            </figure>
+            <section class="post-content">
+
+                <p>So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT Edge application developement.</p><p>In the previous posts <strong>we meticulously avoided introducing any technology-specific dependencies </strong>in our evolving thermostat application example, either by temporarily omitting the code, or by abstracting the various libraries' behavior behind predefined interfaces. The benefit of that is that we keep our business code <strong>technology-agnostic</strong>, and as such, we can easily test it. We have also preserved the freedom to switch platforms any time we choose to. Let's see how we can get there.</p><p>But first..</p><figure class="kg-card kg-image-card"></figure><h2 id="the-azure-iot-module-template">The Azure IoT Module Template</h2><p>Let's use an example to make this easier to understand. Let's assume that we want to implement an Azure IoT Edge module, <strong>starting from the default <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module">Azure IoT Edge Module</a> template</strong>. This template is a simple .NET Core console app, with all the required IoT SDK references in it, that simply echoes all messages coming from the input <code>input1</code> to the output <code>output1</code>. Let's assume we'd like extend this template by <strong>recording every message in a database</strong>. </p><blockquote>The original template source code is <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module/blob/master/content/dotnet-template-azure-iot-edge-module/CSharp/Program.cs">here</a>.</blockquote><p>This is a modified version that includes the message database recording:</p><pre><code class="language-csharp">namespace DependencyInjection
+{
+    using System;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using System.Runtime.Loader;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Amqp.Framing;
+    using Microsoft.Azure.Devices.Client;
+    using Microsoft.Azure.Devices.Client.Transport.Mqtt;
+
+    class Program
+    {
+        static int counter;
+        static void Main(string[] args)
+        {
+            Init().Wait();
+
+            // Wait until the app unloads or is cancelled
+            var cts = new CancellationTokenSource();
+            AssemblyLoadContext.Default.Unloading += (ctx) =&gt; cts.Cancel();
+            Console.CancelKeyPress += (sender, cpe) =&gt; cts.Cancel();
+            WhenCancelled(cts.Token).Wait();
+        }
+
+        /// &lt;summary&gt;
+        /// Handles cleanup operations when app is cancelled or unloads
+        /// &lt;/summary&gt;
+        public static Task WhenCancelled(CancellationToken cancellationToken)
+        {
+            var tcs = new TaskCompletionSource&lt;bool&gt;();
+            cancellationToken.Register(s =&gt; ((TaskCompletionSource&lt;bool&gt;)s).SetResult(true), tcs);
+            return tcs.Task;
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes the ModuleClient and sets up the callback to receive
+        /// messages containing temperature information
+        /// &lt;/summary&gt;
+        static async Task Init()
+        {
+            MqttTransportSettings mqttSetting = new MqttTransportSettings(TransportType.Mqtt_Tcp_Only);
+            ITransportSettings[] settings = { mqttSetting };
+
+            // Open a connection to the Edge runtime
+            ModuleClient ioTHubModuleClient = await ModuleClient.CreateFromEnvironmentAsync(settings);
+            await ioTHubModuleClient.OpenAsync();
+            Console.WriteLine("IoT Hub module client initialized.");
+
+            // Initialize the database client
+            var connectionString = Environment.GetEnvironmentVariable("DbConnectionString");
+            DatabaseClient databaseClient = DatabaseClient.CreateFromConnectionString(connectionString);
+
+            // Register callback to be called when a message is received by the module
+            await ioTHubModuleClient.SetInputMessageHandlerAsync("input1", PipeMessage, (ioTHubModuleClient, databaseClient));
+        }
+
+        /// &lt;summary&gt;
+        /// This method is called whenever the module is sent a message from the EdgeHub. 
+        /// It just pipe the messages without any change.
+        /// It prints all the incoming messages.
+        /// &lt;/summary&gt;
+        static async Task&lt;MessageResponse&gt; PipeMessage(Message message, object userContext)
+        {
+            int counterValue = Interlocked.Increment(ref counter);
+
+            var (moduleClient, databaseClient) = ((ModuleClient, DatabaseClient))userContext;
+            
+
+            byte[] messageBytes = message.GetBytes();
+            string messageString = Encoding.UTF8.GetString(messageBytes);
+            Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
+
+            if (!string.IsNullOrEmpty(messageString))
+            {
+                using (var pipeMessage = new Message(messageBytes))
+                {
+                    foreach (var prop in message.Properties)
+                    {
+                        pipeMessage.Properties.Add(prop.Key, prop.Value);
+                    }
+                    
+                    await databaseClient.RecordMessageAsync(pipeMessage);
+                    
+                    await moduleClient.SendEventAsync("output1", pipeMessage);
+
+                    Console.WriteLine("Received message sent");
+                }
+            }
+            return MessageResponse.Completed;
+        }
+    }
+}
+</code></pre><p>We've made just <strong>a few small changes</strong> to the original template code:</p><ol><li>Inside the <code>Init()</code> we now create our <code>DatabaseClient</code> instance:</li></ol><pre><code class="language-csharp">// Initialize the database client
+            var connectionString = Environment.GetEnvironmentVariable("DbConnectionString");
+            DatabaseClient databaseClient = DatabaseClient.CreateFromConnectionString(connectionString);</code></pre><p>2. Inside the <code>PipeMessage</code> we get the <code>databaseClient</code> instance from the method <code>userContext</code> with:</p><pre><code class="language-csharp">var (moduleClient, databaseClient) = ((ModuleClient, DatabaseClient))userContext;</code></pre><p> 3. In the same <code>PipeMessage</code> we record the message with: </p><pre><code class="language-csharp">await databaseClient.RecordMessageAsync(pipeMessage);</code></pre><p>This is clearly a monolithic and tightly-coupled implementation. <strong>This code will fail </strong>if we don't have a valid connection string and the required environment variables to create the <code>ModuleClient</code>. Even if we did have the required environment variables, we would still need a running database and the entire IoT Edge Device Runtime in place to get it working. </p><p>So, the only way to test this <code>PipeMessage</code> code, to setup an IoT Edge Device and a database server on our development environment, then build deploy this module, and either start searching through the logs, or attach a debugger to the running container. This apparently leaves unit testing out of the question.</p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>Welcome to 1985!</figcaption></figure><p>Congrats! You just traveled 35 years back in the software technology!</p><h2 id="inversion-of-control"><strong>Inversion of Control</strong></h2><p>In it's simplest form, the <strong><strong>constructor injection</strong></strong>, dependency injection is an abstraction strategy that allows us to decouple our business code from any technical implementation. The idea is fairly simple: for every dependency, we define an interface that describes well the dependency's public behavior. Then, for each module we define the it's dependencies at the constructor, by adding the dependency interface as constructor arguments. </p><blockquote><strong>Dependency is something that we use but we don't control</strong>, eg. the <code>ModuleClient</code> and the <code>DatabaseClient</code>, because their behavior <strong>depends </strong>on external processes.</blockquote><p>Let's define these two abstractions. We'll start with the <code>DatabaseClient</code> class. </p><blockquote>For the purpose of simplicity, this is an imaginary database SDK.</blockquote><p>We start by defining a simple interface that contains all useful behavior:</p><pre><code class="language-csharp">public interface IDatabaseClient
+{
+    Task OpenAsync(CancellationToken cancellationToken);
+    Task CloseAsync(CancellationToken cancellationToken);
+    Task RecordMessageAsync(byte[] message);
+}</code></pre><p>Then, we define a wrapper class that implements this interface and wraps the original <code>DatabaseClient</code> object:</p><pre><code class="language-csharp">internal class DatabaseClientWrapper : IDatabaseClient
+{
+    const string CONNECTION_STRING_NAME = "dbConnectionString";
+    DatabaseClient _databaseClient { get; }
+
+    public DatabaseClientWrapper(IConfiguration configuration)
+    {
+        var connectionString =
+            configuration.GetConnectionString(CONNECTION_STRING_NAME);
+
+        _databaseClient = DatabaseClient.
+                CreateFromConnectionString(connectionString);
+    }
+    public async Task OpenAsync(CancellationToken cancellationToken)
+    {
+        await _databaseClient.OpenAsync(cancellationToken);
+    }
+
+    public async Task CloseAsync(CancellationToken cancellationToken)
+    {
+        await _databaseClient.CloseAsync(cancellationToken);
+    }
+
+    public async Task RecordMessageAsync(byte[] message)
+    {
+        await _databaseClient.RecordMessageAsync(message);
+    }
+}</code></pre><blockquote>Note: this wrapper class "depends" on <code>IConfiguration</code></blockquote><p>What we have achieved? We can now replace the <code>DatabaseClient</code> references with <code>IDatabaseClient</code>, which means we don't have anymore hardcoded references on this database SDK inside <code>Program.cs</code>.</p><p>Let's do the same for the <code>ModuleClient</code>. A first version of the interface can be:</p><pre><code class="language-csharp">public interface IModuleClient
+{
+    Task OpenAsync(CancellationToken cancellationToken);
+    Task CloseAsync(CancellationToken cancellationToken);
+    Task SendEventAsync(string outputName, 
+        Message message);
+    Task SetInputMessageHandlerAsync(string inputName, 
+        MessageHandler messageHandler, 
+        object userContext);
+    Task SetMethodHandlerAsync(string methodName, 
+        MethodCallback methodHandler, 
+        object userContext);
+    Task&lt;Twin&gt; GetTwinAsync(CancellationToken cancellationToken);
+    Task&lt;Twin&gt; GetTwinAsync();
+}</code></pre><p>and the wrapper class can be:</p><pre><code class="language-csharp">public class ModuleClientWrapper : IModuleClient
+{
+    private ModuleClient ModuleClient { get; }
+
+    public ModuleClientWrapper()
+    {
+        MqttTransportSettings mqttSetting = 
+                new MqttTransportSettings(TransportType.Mqtt_Tcp_Only);
+        ITransportSettings[] settings = { mqttSetting };
+
+        ModuleClient = ModuleClient.CreateFromEnvironmentAsync(settings).Result;
+    }
+
+    public async Task SendEventAsync(string outputName, Message message)
+    {
+        await ModuleClient.SendEventAsync(outputName, message);
+    }
+
+    public async Task SetInputMessageHandlerAsync(string inputName, 
+        MessageHandler messageHandler, 
+        object userContext)
+    {
+        await ModuleClient.SetInputMessageHandlerAsync(inputName, 
+            messageHandler, 
+            userContext);
+    }
+
+    public async Task SetMethodHandlerAsync(string methodName, 
+        MethodCallback methodHandler, 
+        object userContext)
+    {
+        await ModuleClient.SetMethodHandlerAsync(methodName, 
+            methodHandler, 
+            userContext);
+    }
+    public async Task OpenAsync(CancellationToken cancellationToken)
+    {
+        await ModuleClient.OpenAsync(cancellationToken);
+    }
+    public async Task CloseAsync(CancellationToken cancellationToken)
+    {
+        await ModuleClient.CloseAsync(cancellationToken);
+    }
+    public async Task&lt;Twin&gt; GetTwinAsync(CancellationToken cancellationToken)
+    {
+        return await ModuleClient.GetTwinAsync(cancellationToken);
+    }
+    public async Task&lt;Twin&gt; GetTwinAsync()
+    {
+        return await ModuleClient.GetTwinAsync();
+    }
+}</code></pre><p>After abstracting our dependencies, the final step is to isolate our <em>business</em> code in a new class that <strong><em>depends </em>on these two interfaces. </strong></p><p>Let's call this class <code>PipeModule</code>:</p><pre><code class="language-csharp">public class PipeModule
+{
+    IModuleClient _moduleClient { get; }
+    IDatabaseClient _databaseClient { get; }
+    public PipeModule(IModuleClient moduleClient, 
+        IDatabaseClient databaseClient)
+    {
+        _moduleClient = moduleClient;
+        _databaseClient = databaseClient;
+    }
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await _moduleClient.OpenAsync(cancellationToken);
+        await _databaseClient.OpenAsync(cancellationToken);
+
+        await _moduleClient.SetInputMessageHandlerAsync("input1",
+            new MessageHandler(async (message, context) =&gt;
+            {
+                await _databaseClient.RecordMessageAsync(message.GetBytes());
+                await _moduleClient.SendEventAsync("output1", message);
+                return await Task.FromResult(MessageResponse.Completed);
+            }), this);
+    }
+        
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await _moduleClient.CloseAsync(cancellationToken);
+        await _databaseClient.CloseAsync(cancellationToken);
+    }
+}</code></pre><p>This class contains some initialization and termination logic, and our piping <em>business </em>code, which is just these two lines:</p><pre><code class="language-csharp">await _databaseClient.RecordMessageAsync(message.GetBytes());
+await _moduleClient.SendEventAsync("output1", message);</code></pre><p>Now, with these abstractions in mind, let's see how the original example looks like:</p><pre><code class="language-csharp">class Program2
+{
+    static async Task Main(string[] args)
+    {
+        // Read the configuration
+        IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
+        // Create the cancelation token source
+        var cancellationTokenSource = new CancellationTokenSource();
+        AssemblyLoadContext.Default.Unloading +=
+            (cts) =&gt; cancellationTokenSource.Cancel();
+
+        Console.CancelKeyPress +=
+            (sender, cts) =&gt;
+            {
+                Console.WriteLine("Ctrl+C detected.");
+                cts.Cancel = true;
+                cancellationTokenSource.Cancel();
+            };
+
+        await Init(configuration, cancellationTokenSource.Token);
+
+        // Wait until the app unloads or is cancelled
+        await WhenCancelled(cancellationTokenSource.Token);
+    }
+    public static Task WhenCancelled(CancellationToken cancellationToken)
+    {
+        var taskCompletionSource = new TaskCompletionSource&lt;bool&gt;();
+        cancellationToken.Register(
+            s =&gt; ((TaskCompletionSource&lt;bool&gt;)s).SetResult(true),
+            taskCompletionSource);
+        return taskCompletionSource.Task;
+    }
+    static async Task Init(IConfiguration configuration, 
+        CancellationToken cancellationToken)
+    {
+        IModuleClient moduleClient = new ModuleClientWrapper();
+        IDatabaseClient databaseClient = 
+                new DatabaseClientWrapper(configuration);
+
+        await moduleClient.OpenAsync(cancellationToken);
+        await databaseClient.OpenAsync(cancellationToken);
+        
+        PipeModule pipeModule = new PipeModule(moduleClient, 
+            databaseClient);
+        await pipeModule.StartAsync(cancellationToken);
+
+        Console.WriteLine("Module initialized.");
+    }
+}</code></pre><p>Besides the <code>PipeModule</code>, this version includes some of best practices from the previous posts. Although the code is much simpler, this is just an interim version, we still have a few missing things to take care of, namely, the dependency injection mechanism. </p><p>In the next post we will include a dependency mechanism based on the <code>Microsoft.Extensions.Hosting</code> library and we will see the benefits of doing so.</p>
+
+            </section>
+
+        </article>
+    </main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
+        <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+    </footer>
+</body>
+</html>
