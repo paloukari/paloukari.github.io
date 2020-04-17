@@ -15,18 +15,18 @@
     <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="The Reasonable Man" />
-    <meta property="og:description" content="So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT" />
+    <meta property="og:description" content="This is the sixth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of inversion of control and dependency injection." />
     <meta property="og:url" content="https://havedatawilltrain.com/the-reasonable-man/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" />
     <meta property="article:published_time" content="2020-04-16T21:52:33.000Z" />
-    <meta property="article:modified_time" content="2020-04-16T22:02:04.000Z" />
+    <meta property="article:modified_time" content="2020-04-16T23:18:05.000Z" />
     <meta property="article:tag" content="Azure IoT Edge" />
     
     <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
     <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="The Reasonable Man" />
-    <meta name="twitter:description" content="So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT" />
+    <meta name="twitter:description" content="This is the sixth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of inversion of control and dependency injection." />
     <meta name="twitter:url" content="https://havedatawilltrain.com/the-reasonable-man/" />
     <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" />
     <meta name="twitter:label1" content="Written by" />
@@ -69,7 +69,7 @@
     "headline": "The Reasonable Man",
     "url": "https://havedatawilltrain.com/the-reasonable-man/",
     "datePublished": "2020-04-16T21:52:33.000Z",
-    "dateModified": "2020-04-16T22:02:04.000Z",
+    "dateModified": "2020-04-16T23:18:05.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2020/04/masks.jpg",
@@ -77,7 +77,7 @@
         "height": 570
     },
     "keywords": "Azure IoT Edge",
-    "description": "So far, in this mini-series we have explored various approaches on some standard\nissues that every IoT Edge application needs to address. In this post we will\nstart exploring the big picture, a complete example that is production-ready and\nthat can act as a good starting point the Azure IoT Edge application\ndevelopement.\n\nIn the previous posts we meticulously avoided introducing any\ntechnology-specific dependencies in our evolving thermostat application example,\neither by temporarily omitting th",
+    "description": "This is the sixth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of inversion of control and dependency injection.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://havedatawilltrain.com/"
@@ -120,7 +120,7 @@
             </figure>
             <section class="post-content">
 
-                <p>So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT Edge application developement.</p><p>In the previous posts <strong>we meticulously avoided introducing any technology-specific dependencies </strong>in our evolving thermostat application example, either by temporarily omitting the code, or by abstracting the various libraries' behavior behind predefined interfaces. The benefit of that is that we keep our business code <strong>technology-agnostic</strong>, and as such, we can easily test it. We have also preserved the freedom to switch platforms any time we choose to. Let's see how we can get there.</p><p>But first..</p><figure class="kg-card kg-image-card"></figure><h2 id="the-azure-iot-module-template">The Azure IoT Module Template</h2><p>Let's use an example to make this easier to understand. Let's assume that we want to implement an Azure IoT Edge module, <strong>starting from the default <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module">Azure IoT Edge Module</a> template</strong>. This template is a simple .NET Core console app, with all the required IoT SDK references in it, that simply echoes all messages coming from the input <code>input1</code> to the output <code>output1</code>. Let's assume we'd like extend this template by <strong>recording every message in a database</strong>. </p><blockquote>The original template source code is <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module/blob/master/content/dotnet-template-azure-iot-edge-module/CSharp/Program.cs">here</a>.</blockquote><p>This is a modified version that includes the message database recording:</p><pre><code class="language-csharp">namespace DependencyInjection
+                <p>So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT Edge application developement.</p><p>In the previous posts <strong>we meticulously avoided introducing any technology-specific dependencies </strong>in our evolving thermostat application example, either by temporarily omitting the code, or by abstracting the various libraries' behavior behind predefined interfaces. The benefit of this is that we keep our business code <strong>technology-agnostic</strong>, and as such, we can easily test it. We have also preserved the freedom to switch platforms any time we choose to. Let's see how we can get there.</p><p>But first..</p><figure class="kg-card kg-image-card"></figure><h2 id="the-azure-iot-module-template">The Azure IoT Module Template</h2><p>Let's use an example to make this easier to understand. Let's assume that we want to implement an Azure IoT Edge module, <strong>starting from the default <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module">Azure IoT Edge Module</a> template</strong>. This template is a simple .NET Core console app, with all the required IoT SDK references in it, that simply echoes all messages coming from the input <code>input1</code> to the output <code>output1</code>. Let's assume we'd like extend this template by <strong>recording every message in a database</strong>. </p><blockquote>The original template source code is <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module/blob/master/content/dotnet-template-azure-iot-edge-module/CSharp/Program.cs">here</a>.</blockquote><p>This is a modified version that includes the message database recording:</p><pre><code class="language-csharp">namespace DependencyInjection
 {
     using System;
     using System.IO;
@@ -217,8 +217,8 @@
     }
 }
 </code></pre><p>We've made just <strong>a few small changes</strong> to the original template code:</p><ol><li>Inside the <code>Init()</code> we now create our <code>DatabaseClient</code> instance:</li></ol><pre><code class="language-csharp">// Initialize the database client
-            var connectionString = Environment.GetEnvironmentVariable("DbConnectionString");
-            DatabaseClient databaseClient = DatabaseClient.CreateFromConnectionString(connectionString);</code></pre><p>2. Inside the <code>PipeMessage</code> we get the <code>databaseClient</code> instance from the method <code>userContext</code> with:</p><pre><code class="language-csharp">var (moduleClient, databaseClient) = ((ModuleClient, DatabaseClient))userContext;</code></pre><p> 3. In the same <code>PipeMessage</code> we record the message with: </p><pre><code class="language-csharp">await databaseClient.RecordMessageAsync(pipeMessage);</code></pre><p>This is clearly a monolithic and tightly-coupled implementation. <strong>This code will fail </strong>if we don't have a valid connection string and the required environment variables to create the <code>ModuleClient</code>. Even if we did have the required environment variables, we would still need a running database and the entire IoT Edge Device Runtime in place to get it working. </p><p>So, the only way to test this <code>PipeMessage</code> code, to setup an IoT Edge Device and a database server on our development environment, then build deploy this module, and either start searching through the logs, or attach a debugger to the running container. This apparently leaves unit testing out of the question.</p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>Welcome to 1985!</figcaption></figure><p>Congrats! You just traveled 35 years back in the software technology!</p><h2 id="inversion-of-control"><strong>Inversion of Control</strong></h2><p>In it's simplest form, the <strong><strong>constructor injection</strong></strong>, dependency injection is an abstraction strategy that allows us to decouple our business code from any technical implementation. The idea is fairly simple: for every dependency, we define an interface that describes well the dependency's public behavior. Then, for each module we define the it's dependencies at the constructor, by adding the dependency interface as constructor arguments. </p><blockquote><strong>Dependency is something that we use but we don't control</strong>, eg. the <code>ModuleClient</code> and the <code>DatabaseClient</code>, because their behavior <strong>depends </strong>on external processes.</blockquote><p>Let's define these two abstractions. We'll start with the <code>DatabaseClient</code> class. </p><blockquote>For the purpose of simplicity, this is an imaginary database SDK.</blockquote><p>We start by defining a simple interface that contains all useful behavior:</p><pre><code class="language-csharp">public interface IDatabaseClient
+var connectionString = Environment.GetEnvironmentVariable("DbConnectionString");
+DatabaseClient databaseClient = DatabaseClient.CreateFromConnectionString(connectionString);</code></pre><p>2. Inside the <code>PipeMessage</code> we get the <code>databaseClient</code> instance from the method <code>userContext</code> with:</p><pre><code class="language-csharp">var (moduleClient, databaseClient) = ((ModuleClient, DatabaseClient))userContext;</code></pre><p> 3. In the same <code>PipeMessage</code> we record the message with: </p><pre><code class="language-csharp">await databaseClient.RecordMessageAsync(pipeMessage);</code></pre><p>This is clearly a monolithic and tightly-coupled implementation. <strong>This code will fail </strong>if we don't have a valid connection string and the required environment variables to create the <code>ModuleClient</code>. Even if we did have the required environment variables, we would still need a running database and the entire IoT Edge Device Runtime in place to get it working. </p><p>So, the only way to test this <code>PipeMessage</code> code is </p><ul><li>to setup an IoT Edge Device on your development environment</li><li>setup a database server on your development environment</li><li>build and deploy a new version of the edge application </li><li>either attach a debugger to the running container or start searching through the logs. </li></ul><p>This apparently leaves unit testing out of the question.</p><figure class="kg-card kg-image-card kg-card-hascaption"><figcaption>Welcome to 1985!</figcaption></figure><p>Congrats! You just traveled 35 years back in the software!</p><h2 id="inversion-of-control"><strong>Inversion of Control</strong></h2><p>In it's simplest form, dependency injection is an abstraction strategy that allows us to decouple our business code from any technical implementation. The idea is fairly simple: for every dependency, we define an interface that describes well the dependency's public behavior. Then, for each module we define the it's dependencies at the constructor, by adding the dependency interface as constructor arguments. </p><blockquote><strong>A dependency is something that we use but we don't control</strong>, eg. the <code>ModuleClient</code> and the <code>DatabaseClient</code>, because their behavior <strong>depends </strong>on external processes.</blockquote><p>Let's define these two abstractions. We'll start with the <code>DatabaseClient</code> class. </p><blockquote>For the purpose of simplicity, this is an imaginary database SDK.</blockquote><p>We start by defining a simple interface that contains all useful behavior:</p><pre><code class="language-csharp">public interface IDatabaseClient
 {
     Task OpenAsync(CancellationToken cancellationToken);
     Task CloseAsync(CancellationToken cancellationToken);
@@ -250,7 +250,7 @@
     {
         await _databaseClient.RecordMessageAsync(message);
     }
-}</code></pre><blockquote>Note: this wrapper class "depends" on <code>IConfiguration</code></blockquote><p>What we have achieved? We can now replace the <code>DatabaseClient</code> references with <code>IDatabaseClient</code>, which means we don't have anymore hardcoded references on this database SDK inside <code>Program.cs</code>.</p><p>Let's do the same for the <code>ModuleClient</code>. A first version of the interface can be:</p><pre><code class="language-csharp">public interface IModuleClient
+}</code></pre><blockquote>Note: this wrapper class "depends" on <code>IConfiguration</code></blockquote><p>What have we achieved? We can now replace the <code>DatabaseClient</code> references with <code>IDatabaseClient</code>, which means we don't have any more hardcoded references on this database SDK inside <code>Program.cs</code>.</p><p>Let's do the same for the <code>ModuleClient</code>. A first version of the interface can be:</p><pre><code class="language-csharp">public interface IModuleClient
 {
     Task OpenAsync(CancellationToken cancellationToken);
     Task CloseAsync(CancellationToken cancellationToken);
@@ -345,7 +345,7 @@
         await _databaseClient.CloseAsync(cancellationToken);
     }
 }</code></pre><p>This class contains some initialization and termination logic, and our piping <em>business </em>code, which is just these two lines:</p><pre><code class="language-csharp">await _databaseClient.RecordMessageAsync(message.GetBytes());
-await _moduleClient.SendEventAsync("output1", message);</code></pre><p>Now, with these abstractions in mind, let's see how the original example looks like:</p><pre><code class="language-csharp">class Program2
+await _moduleClient.SendEventAsync("output1", message);</code></pre><p>Now, with these abstractions in mind, let's see what the original example looks like:</p><pre><code class="language-csharp">class Program2
 {
     static async Task Main(string[] args)
     {
@@ -398,7 +398,7 @@ await _moduleClient.SendEventAsync("output1", message);</code></pre><p>Now, with
 
         Console.WriteLine("Module initialized.");
     }
-}</code></pre><p>Besides the <code>PipeModule</code>, this version includes some of best practices from the previous posts. Although the code is much simpler, this is just an interim version, we still have a few missing things to take care of, namely, the dependency injection mechanism. </p><p>In the next post we will include a dependency mechanism based on the <code>Microsoft.Extensions.Hosting</code> library and we will see the benefits of doing so.</p>
+}</code></pre><p>Besides the <code>PipeModule</code>, this version includes some of the best practices from the previous posts. Although the code is much simpler, this is just an interim version, we still have a few missing things to take care of, namely, the dependency injection mechanism. </p><p>In the next post we will include a dependency injection mechanism that is based on the <code>Microsoft.Extensions.Hosting</code> library and we will see the benefits of doing so.</p>
 
             </section>
 
