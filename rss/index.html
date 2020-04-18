@@ -1,4 +1,188 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[HAVE DATA - WILL TRAIN]]></title><description><![CDATA[The adventures of a ML Engineer, who travels the Web working as a mercenary for people who hire him to solve their problems, but he provides his services for free to poor people that need his help]]></description><link>https://havedatawilltrain.com/</link><image><url>https://havedatawilltrain.com/favicon.png</url><title>HAVE DATA - WILL TRAIN</title><link>https://havedatawilltrain.com/</link></image><generator>Ghost 3.12</generator><lastBuildDate>Thu, 16 Apr 2020 23:18:10 GMT</lastBuildDate><atom:link href="https://havedatawilltrain.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[The Reasonable Man]]></title><description><![CDATA[This is the sixth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of inversion of control and dependency injection.]]></description><link>https://havedatawilltrain.com/the-reasonable-man/</link><guid isPermaLink="false">5e95fe62e73bbc006e59f48e</guid><category><![CDATA[Azure IoT Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Thu, 16 Apr 2020 21:52:33 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" alt="The Reasonable Man"><p>So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT Edge application developement.</p><p>In the previous posts <strong>we meticulously avoided introducing any technology-specific dependencies </strong>in our evolving thermostat application example, either by temporarily omitting the code, or by abstracting the various libraries' behavior behind predefined interfaces. The benefit of this is that we keep our business code <strong>technology-agnostic</strong>, and as such, we can easily test it. We have also preserved the freedom to switch platforms any time we choose to. Let's see how we can get there.</p><p>But first..</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-33.png" class="kg-image" alt="The Reasonable Man"></figure><h2 id="the-azure-iot-module-template">The Azure IoT Module Template</h2><p>Let's use an example to make this easier to understand. Let's assume that we want to implement an Azure IoT Edge module, <strong>starting from the default <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module">Azure IoT Edge Module</a> template</strong>. This template is a simple .NET Core console app, with all the required IoT SDK references in it, that simply echoes all messages coming from the input <code>input1</code> to the output <code>output1</code>. Let's assume we'd like extend this template by <strong>recording every message in a database</strong>. </p><blockquote>The original template source code is <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module/blob/master/content/dotnet-template-azure-iot-edge-module/CSharp/Program.cs">here</a>.</blockquote><p>This is a modified version that includes the message database recording:</p><pre><code class="language-csharp">namespace DependencyInjection
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[HAVE DATA - WILL TRAIN]]></title><description><![CDATA[The adventures of a ML Engineer, who travels the Web working as a mercenary for people who hire him to solve their problems, but he provides his services for free to poor people that need his help]]></description><link>https://havedatawilltrain.com/</link><image><url>https://havedatawilltrain.com/favicon.png</url><title>HAVE DATA - WILL TRAIN</title><link>https://havedatawilltrain.com/</link></image><generator>Ghost 3.12</generator><lastBuildDate>Sat, 18 Apr 2020 00:31:27 GMT</lastBuildDate><atom:link href="https://havedatawilltrain.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[The Man Who Wouldn't Test]]></title><description><![CDATA[This is the seventh post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of dependency injection.]]></description><link>https://havedatawilltrain.com/the-man-who-wouldnt-test/</link><guid isPermaLink="false">5e98d5add47c36006e770848</guid><category><![CDATA[Azure IoT Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Sat, 18 Apr 2020 00:28:49 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/04/pussel_dusk_closeup.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/04/pussel_dusk_closeup.jpg" alt="The Man Who Wouldn't Test"><p>In the <a href="https://havedatawilltrain.com/the-reasonable-man/">last post</a> we refactored the <strong>default Azure IoT Edge Module C# template code </strong>with a couple of dependency abstractions. In this post we will add a dependency injection mechanism in the mix and we will evolve this application example to a level that can be a good starting point for every Azure IoT Edge application.</p><p>In the final version of the <code>Program.cs</code> of the <a href="https://havedatawilltrain.com/the-reasonable-man/">previous post</a>, we reached a point where we could <strong>compose </strong>the dependencies together and create a <em>business </em>instance of the <code>PipeModule</code>. A simplified summarization of this composition is:</p><pre><code class="language-csharp">IConfiguration configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .Build();
+
+var cancellationTokenSource = new CancellationTokenSource();
+
+IModuleClient moduleClient = new ModuleClientWrapper();
+
+IDatabaseClient databaseClient = 
+	new DatabaseClientWrapper(configuration);
+
+PipeModule pipeModule = new PipeModule(moduleClient, databaseClient);</code></pre><p>In this dependency hierarchy, we had to explicitly pass the previously created instances to create more complex ones, all the way to creating the <code>PipeModule</code>. Although this approach is far better than the monolithic approach of the original template code, <strong>we still have hardcoded dependencies</strong>: to replace a dependency, we would still need to change this code, recompile and redeploy.</p><p>Wouldn't be nice if there was a mechanism that satisfied this hierarchy dependency composition dynamically, so that we can drive our changes via the configuration?</p><p>The <code>Microsoft.Extensions.Hosting</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting?view=dotnet-plat-ext-3.1">namespace</a> contains many utility classes like the <code><a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.hostbuilder?view=dotnet-plat-ext-3.1">HostBuilder</a></code>. This library is a good starting point because it references all other required libraries like the <code>Microsoft.Extensions.Configuration</code>, <code>Microsoft.Extension.DependencyInjection</code> and <code>Microsoft.Extension.Logging</code> and brings together all these abstractions and functionality under a few simple interfaces.</p><blockquote>Note: to install this extension library, run:<br><code>dotnet add package Microsoft.Extensions.Hosting</code> </blockquote><p>In contrast to the Azure IoT SDK, this library excels in this <strong>distinguishing the application from the host</strong>. The <code>HostBuilder</code> is a very useful utility that helps us to compose together our <strong>application services</strong> and our hosting <strong>infrastructure</strong>. A service is an component of our application, an element in our application dependency hierarchy, and the hosting <strong>infrastructure</strong> is anything specific to the hosting environment, like for example the environment variables configuration.</p><p>Let's refactor now our previous example by using the <code>HostBuilder</code> to configure our dependencies. We'll start first by implementing the <code>IHostedService</code> interface in our <code>PipeModule</code> class. This interface defines just two methods:</p><pre><code class="language-csharp">public interface IHostedService
+{
+    Task StartAsync(CancellationToken cancellationToken);
+    Task StopAsync(CancellationToken cancellationToken);
+}</code></pre><p>And yes, the <code>PipeModule</code> from the last post already implements these two methods, so we should just add this interface in the class signature:</p><pre><code class="language-csharp">public class PipeModule : IHostedService</code></pre><p>Now, we can replace the entire <code>Program</code> class with this code:</p><pre><code class="language-csharp">class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Read the configuration
+        IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
+        // Create the cancelation token source
+        var cancellationTokenSource = new CancellationTokenSource();
+
+        // Register to the application lifetime events
+        AssemblyLoadContext.Default.Unloading +=
+        (cts) =&gt; cancellationTokenSource.Cancel();
+
+        Console.CancelKeyPress +=
+            (sender, cts) =&gt;
+            {
+                Console.WriteLine("Ctrl+C detected.");
+                cts.Cancel = true;
+                cancellationTokenSource.Cancel();
+            };
+
+        // Build the host
+        using (var host = new HostBuilder()
+            .ConfigureServices((hostContext, services) =&gt;
+            {
+                services.AddSingleton(cancellationTokenSource);
+                services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                services.AddSingleton&lt;IDatabaseClient, DatabaseClientWrapper&gt;();
+                services.AddHostedService&lt;PipeModule&gt;();
+            })
+            .Build())
+        {
+
+            // Start the application
+            host.Start();
+
+            // Wait until the app unloads or is cancelled
+            await WhenCancelled(cancellationTokenSource.Token);
+        }
+
+    }
+    public static Task WhenCancelled(CancellationToken cancellationToken)
+    {
+        var taskCompletionSource = new TaskCompletionSource&lt;bool&gt;();
+        cancellationToken.Register(
+            s =&gt; ((TaskCompletionSource&lt;bool&gt;)s).SetResult(true),
+            taskCompletionSource);
+        return taskCompletionSource.Task;
+    }
+}</code></pre><p>We already saw how to control the application lifetime with the <code>CancellationTokenSource</code> in <a href="https://havedatawilltrain.com/restarted-by-request/">this post</a>. The truth is that in the early versions of .NET Core, the <code>AppDomain.CurrentDomain.ProcessExit</code> event was replaced by the <code>AssemblyLoadContext.Default.Unloading</code> event, but now both of them exist and can be used interchangeably.</p><p>In the <code>IHostBuilder</code> we can find the <code>UseConsoleLifetime()</code> extension method, which simply adds an <code><a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostlifetime?view=dotnet-plat-ext-3.1">IHostLifetime</a></code> service which is suitable for console apps, the <code>Microsoft.Extensions.Hosting.Internal.ConsoleLifetime</code> service. <strong>The <code><a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostlifetime?view=dotnet-plat-ext-3.1">IHostLifetime</a></code> services control when the host starts and when it stops</strong>.</p><p>This <code>ConsoleLifetime</code> service:</p><ul><li>Listens for <code>Ctrl+C</code>/ <code>SIGINT</code> or <code>SIGTERM</code> and calls <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime.stopapplication"><code>StopApplication</code></a> to start the shutdown process.</li><li>Unblocks extensions such as <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.1#runasync"><code>RunAsync</code></a> and <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.1#waitforshutdownasync"><code>WaitForShutdownAsync</code></a>.</li></ul><p>Let's refactor the above code now using this lifecycle service:</p><pre><code class="language-csharp">class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Read the configuration
+        IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
+        // Build the host
+        using (var host = new HostBuilder()
+            .ConfigureServices((hostContext, services) =&gt;
+            {
+                services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                services.AddSingleton&lt;IDatabaseClient, DatabaseClientWrapper&gt;();
+                services.AddHostedService&lt;PipeModule&gt;();
+            })
+            .UseConsoleLifetime()
+            .Build())
+        {
+            // Run the application and wait for the application to exit
+            await host.RunAsync();
+        }
+    }
+}</code></pre><blockquote>What do you know! After seven posts, we're back to a single-page long <code>Main</code>! </blockquote><p>In the above version, instead of passing the <code>CancellationTokenSource</code> to our services to signal an application termination, we can inject the <code>IHostApplicationLifetime</code> service:</p><pre><code class="language-csharp">public DatabaseClientWrapper(IHostApplicationLifetime hostApplicationLifetime)</code></pre><p>Then, we can register to the <code>ApplicationStopping</code>event to gracefully stop the service, and call the <code>StopApplication()</code> to trigger an application termination from inside the service.</p><blockquote>A very good description of the startup and shutdown sequence can be found <a href="https://andrewlock.net/introducing-ihostlifetime-and-untangling-the-generic-host-startup-interactions/">here</a>:  </blockquote><p>We've also <a href="https://havedatawilltrain.com/the-service-room/">analyzed</a> the difference between the <strong>application </strong>and the <strong>system configuration</strong>,<strong> </strong>and we examined a few best practices on managing this configuration. Similarly to the <code>UseConsoleLifetime()</code> extension, the <code>ConfigureHostConfiguration</code> and <code>ConfigureAppConfiguration</code> extension methods are there to help us read the application and the host configuration. </p><p>Let's see how this looks like:</p><pre><code class="language-csharp">class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Build the host
+        using (var host = new HostBuilder()
+            .ConfigureHostConfiguration(configHost =&gt;
+            {
+                configHost.SetBasePath(Directory.GetCurrentDirectory());
+                configHost.AddJsonFile("hostsettings.json", optional: true);
+                configHost.AddEnvironmentVariables(prefix: "PREFIX_");
+                configHost.AddCommandLine(args);
+            })
+            .ConfigureAppConfiguration((hostContext, configApp) =&gt;
+            {
+                configApp.AddJsonFile("appsettings.json", optional: true);
+                configApp.AddJsonFile(
+                    $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
+                    optional: true);
+                configApp.AddEnvironmentVariables();
+                configApp.AddCommandLine(args);
+            })
+            .ConfigureServices((hostContext, services) =&gt;
+            {
+                services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                services.AddSingleton&lt;IDatabaseClient, DatabaseClientWrapper&gt;();
+                services.AddHostedService&lt;PipeModule&gt;();
+            })
+            .UseConsoleLifetime()
+            .Build())
+        {
+            // Run the application and wait for the application to exit
+            await host.RunAsync();
+        }
+    }
+}</code></pre><blockquote>Note that when we read the application configuration in the <code>ConfigureAppConfiguration</code>, we have access to the host configuration via the <code>hostContext.Configuration</code> property. </blockquote><p>The application configuration now will automatically be injected to any service that depends on it, like the <code>DatabaseClientWrapper</code> we implemented in the last post.</p><p>A final step is to configure and hook up our logging logic. One alternative is to use the corresponding extension method, like for example:</p><pre><code class="language-csharp">.ConfigureLogging((logging) =&gt;
+{
+    logging.AddFilter("Microsoft", LogLevel.Warning);
+    logging.AddFilter("System", LogLevel.Warning);
+    logging.AddFilter("DependencyInjection.Program", LogLevel.Debug);
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.AddEventSourceLogger();
+    logging.AddEventLog();
+})</code></pre><p>If we do this, we've just replicated the behavior of the <strong>.NET Generic Host, </strong>which is just a pre-defined host configuration, as described <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.1#default-builder-settings">here</a>.</p><p>Then our code can be simplified to:</p><pre><code class="language-csharp">class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Build default host
+        using (var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =&gt;
+            {
+                services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                services.AddSingleton&lt;IDatabaseClient, DatabaseClientWrapper&gt;();
+                services.AddHostedService&lt;PipeModule&gt;();
+            })
+            .UseConsoleLifetime()
+            .Build())
+        {
+            // Run the application and wait for the application to exit
+            await host.RunAsync();
+        }
+    }
+}</code></pre><p>Alternatively, we can use a <code>Serilog</code> logger, driven by configuration. To do this, we will add the <code>Serilog.Extensions.Hosting</code> nuget package:</p><pre><code class="language-csharp">class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Build default host
+        using (var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =&gt;
+            {
+                // Configure our services
+                services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                services.AddSingleton&lt;IDatabaseClient, DatabaseClientWrapper&gt;();
+                services.AddHostedService&lt;PipeModule&gt;();
+            })
+            .UseSerilog((hostingContext, log) =&gt;
+            {
+                log.ReadFrom.Configuration(hostingContext.Configuration);
+            })
+            .UseConsoleLifetime()
+            .Build())
+        {
+            // Run the application and wait for the application to exit
+            await host.RunAsync();
+        }
+    }
+}</code></pre><p>By doing so, we we get the expected logger injection behavior by adding a logger dependency in a constructor:</p><pre><code class="language-csharp">public DatabaseClientWrapper(ILogger&lt;DatabaseClientWrapper&gt; logger)</code></pre><p>Also, the <code>Serilog.Log.Logger</code> is set implicitly, and can be accessed from everywhere by the static <code>Serilog.Log</code> property.</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/impressive.gif" class="kg-image" alt="The Man Who Wouldn't Test"></figure><p>It is impressive how much plumbing code is hidden in this last version, but without loosing the ability to override the default host builder if we want to, as we did with the Serilog logger.</p><h3 id="recap">Recap</h3><p>In these mini-series blog posts we have explored various patterns and best practices and we managed to evolve the monolithic Azure IoT Edge module C# template code to a loosely coupled application that allows us have a true F5 development experience and define unit tests.</p><p>In the next and final post we will explore how we can use this loosely coupled design to setup our development environment and our unit tests.</p>]]></content:encoded></item><item><title><![CDATA[The Reasonable Man]]></title><description><![CDATA[This is the sixth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of inversion of control and dependency injection.]]></description><link>https://havedatawilltrain.com/the-reasonable-man/</link><guid isPermaLink="false">5e95fe62e73bbc006e59f48e</guid><category><![CDATA[Azure IoT Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Thu, 16 Apr 2020 21:52:33 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/04/masks.jpg" alt="The Reasonable Man"><p>So far, in this mini-series we have explored various approaches on some standard issues that every IoT Edge application needs to address. In this post we will start exploring the big picture, a complete example that is production-ready and that can act as a good starting point the Azure IoT Edge application developement.</p><p>In the previous posts <strong>we meticulously avoided introducing any technology-specific dependencies </strong>in our evolving thermostat application example, either by temporarily omitting the code, or by abstracting the various libraries' behavior behind predefined interfaces. The benefit of this is that we keep our business code <strong>technology-agnostic</strong>, and as such, we can easily test it. We have also preserved the freedom to switch platforms any time we choose to. Let's see how we can get there.</p><p>But first..</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-33.png" class="kg-image" alt="The Reasonable Man"></figure><h2 id="the-azure-iot-module-template">The Azure IoT Module Template</h2><p>Let's use an example to make this easier to understand. Let's assume that we want to implement an Azure IoT Edge module, <strong>starting from the default <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module">Azure IoT Edge Module</a> template</strong>. This template is a simple .NET Core console app, with all the required IoT SDK references in it, that simply echoes all messages coming from the input <code>input1</code> to the output <code>output1</code>. Let's assume we'd like extend this template by <strong>recording every message in a database</strong>. </p><blockquote>The original template source code is <a href="https://github.com/Azure/dotnet-template-azure-iot-edge-module/blob/master/content/dotnet-template-azure-iot-edge-module/CSharp/Program.cs">here</a>.</blockquote><p>This is a modified version that includes the message database recording:</p><pre><code class="language-csharp">namespace DependencyInjection
 {
     using System;
     using System.IO;
