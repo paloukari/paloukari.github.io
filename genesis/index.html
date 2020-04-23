@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Genesis</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=d0538246fb" />
+
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://havedatawilltrain.com/genesis/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="amphtml" href="https://havedatawilltrain.com/genesis/amp/" />
+    
+    <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Genesis" />
+    <meta property="og:description" content="This is the eight post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a mocked runtime." />
+    <meta property="og:url" content="https://havedatawilltrain.com/genesis/" />
+    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/genesis.jpg" />
+    <meta property="article:published_time" content="2020-04-22T23:29:14.000Z" />
+    <meta property="article:modified_time" content="2020-04-22T23:45:28.000Z" />
+    <meta property="article:tag" content="Azure IoT Edge" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Genesis" />
+    <meta name="twitter:description" content="This is the eight post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a mocked runtime." />
+    <meta name="twitter:url" content="https://havedatawilltrain.com/genesis/" />
+    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2020/04/genesis.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Spyros Garyfallos" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Azure IoT Edge" />
+    <meta name="twitter:site" content="@SpyrosCarnation" />
+    <meta name="twitter:creator" content="@SpyrosCarnation" />
+    <meta property="og:image:width" content="1000" />
+    <meta property="og:image:height" content="635" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "HAVE DATA - WILL TRAIN",
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Spyros Garyfallos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/09/Capture.PNG",
+            "width": 375,
+            "height": 439
+        },
+        "url": "https://havedatawilltrain.com/author/spyros/",
+        "sameAs": [
+            "https://www.facebook.com/spyros.garyfallos",
+            "https://twitter.com/SpyrosCarnation"
+        ]
+    },
+    "headline": "Genesis",
+    "url": "https://havedatawilltrain.com/genesis/",
+    "datePublished": "2020-04-22T23:29:14.000Z",
+    "dateModified": "2020-04-22T23:45:28.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://havedatawilltrain.com/content/images/2020/04/genesis.jpg",
+        "width": 1000,
+        "height": 635
+    },
+    "keywords": "Azure IoT Edge",
+    "description": "This is the eight post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a mocked runtime.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://havedatawilltrain.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 3.12" />
+    <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-148729349-1');
+</script>
+
+<!-- link tag -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" />
+
+<style> pre[class*="language-"] { font-size: 0.75em; } </style>
+
+</head>
+<body class="post-template tag-azure-iot-edge">
+
+    <div class="site-wrapper">
+
+        
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+                <a class="site-nav-logo" href="https://havedatawilltrain.com"><img src="/content/images/2019/07/Logo2.png" alt="HAVE DATA - WILL TRAIN" /></a>
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="https://havedatawilltrain.com/">Home</a></li>
+    <li class="nav-author" role="menuitem"><a href="https://havedatawilltrain.com/author/spyros/">Author</a></li>
+</ul>
+
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+                <a class="social-link social-link-fb" href="https://www.linkedin.com/in/spirosgarifallos/" title="Linkedin" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+width="26" height="26"
+viewBox="0 0 192 192"
+style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,192v-192h192v192z" fill="none"></path><g fill="#ffffff"><g id="surface1"><path d="M156,0h-120c-19.875,0 -36,16.125 -36,36v120c0,19.875 16.125,36 36,36h120c19.875,0 36,-16.125 36,-36v-120c0,-19.875 -16.125,-36 -36,-36zM59.36539,162.98077h-29.82693l-0.17307,-89.30769h29.82692zM43.70192,61.99038h-0.17308c-9.75,0 -16.03846,-6.72115 -16.03846,-15.08653c0,-8.56731 6.49039,-15.0577 16.41347,-15.0577c9.92308,0 16.00961,6.49038 16.21153,15.0577c0,8.36538 -6.31731,15.08653 -16.41346,15.08653zM162.77885,162.98077h-30.08654v-48.51923c0,-11.74039 -3.11538,-19.73077 -13.61538,-19.73077c-8.01923,0 -12.34615,5.39423 -14.42308,10.61538c-0.77885,1.875 -0.98077,4.44231 -0.98077,7.06731v50.56731h-30.23077l-0.17308,-89.30769h30.23077l0.17308,12.60577c3.86538,-5.97116 10.29808,-14.42308 25.70192,-14.42308c19.09616,0 33.37501,12.46154 33.37501,39.25961v51.86539z"></path></g></g></g></svg></a>
+                <a class="social-link social-link-tw" href="https://twitter.com/SpyrosCarnation" title="Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+        </div>
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/https://havedatawilltrain.com/rss/" title="RSS" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+</a>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <article class="post-full post tag-azure-iot-edge ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="2020-04-22">22 April 2020</time>
+                        <span class="date-divider">/</span> <a href="/tag/azure-iot-edge/">Azure IoT Edge</a>
+                </section>
+                <h1 class="post-full-title">Genesis</h1>
+            </header>
+
+            <figure class="post-full-image">
+                <img
+                    srcset="/content/images/size/w300/2020/04/genesis.jpg 300w,
+                            /content/images/size/w600/2020/04/genesis.jpg 600w,
+                            /content/images/size/w1000/2020/04/genesis.jpg 1000w,
+                            /content/images/size/w2000/2020/04/genesis.jpg 2000w"
+                    sizes="(max-width: 800px) 400px,
+                            (max-width: 1170px) 700px,
+                            1400px"
+                    src="/content/images/size/w2000/2020/04/genesis.jpg"
+                    alt="Genesis"
+                />
+            </figure>
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    <p>In this blog post mini-series we have been exploring the gradual evolution of an IoT Edge application, starting from a tightly-coupled monolithic approach based on the default C# module template, to a more loosely coupled and composable application. In this post we will see how we can use this design to setup a true F5 development experience.</p><p>In the process of evolving our IoT Edge the application, we explored many best practices on various trivial IoT Edge topics, like controlling the application lifetime, logging, configuration, telemetry pumps and more. In this post we will use an IoT Edge application example to see how all these things come together with setting up a flexible development environment. Although no prior knowledge is required to follow through, a review of the the pervious posts is highly recommended to get a better understanding of the design decisions.</p><h2 id="improving-the-development-experience">Improving the development experience</h2><p>In the past years we've witnessed the re-emergence of the CLI-oriented development, where people use various CLIs to compose, compile, containerize and publish their IoT Edge application. As an effect of this, today we can find a CLI for every <a href="https://docs.microsoft.com/en-us/cli/azure/azure-cli-extensions-list?view=azure-cli-latest">single thing</a>. And although these CLIs were meant to replace opinionated and platform specific IDEs, like Visual Studio, these CLIs ended up getting integrated with development tools like VS Code, hidden behind the UI. </p><p>Specifically for the Azure IoT Edge development experience, the result has been disappointing, and for anyone who wants to build an IoT Edge application with above the <em>Hello World</em> complexity, a better approach is required. In the following example, we will take a code-first approach: we will include most of the development tooling inside the application source code, so that people can get started with just cloning a repo.</p><h3 id="simulated-temperature-sensor-v2-0">Simulated Temperature Sensor v2.0</h3><p>Let's say we want to build from scratch the runtime's <a href="https://github.com/Azure/iotedge/tree/master/edge-modules/SimulatedTemperatureSensor">simulated temperature sensor</a> example, without any prior development preparation, just from a clean Linux, macOS or Windows installation; I prefer using Visual Studio on Windows.</p><ol><li><a href="https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-linux">Install the latest .NET Core SDK</a>.</li><li>Install the <a href="https://code.visualstudio.com/download">latest VS Code</a>. </li><li>Create a folder: <br><code>mkdir SimulatedTemperatureSensor</code></li><li>Create a new console app in this folder: <br><code>cd SimulatedTemperatureSensor</code><br><code>dotnet new console</code></li><li>Install the following packages: <br><code>dotnet add package Microsoft.Azure.Devices.Client</code> <br><code>dotnet add package Microsoft.Extensions.Hosting</code> <br><code>dotnet add package Serilog.Extensions.Hosting</code> <br><code>dotnet add package Serilog.Settings.Configuration</code><br><code>dotnet add package Serilog.Sinks.Console</code><br><code>dotnet add package Serilog.Enrichers.Thread</code></li><li>Open the project in VS Code: <br><code>code .</code></li><li>Replace the Program.cs with the following code: </li></ol><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            using (var host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =&gt;
+                {
+                    if(hostContext.HostingEnvironment.EnvironmentName == "Development")
+                        services.AddSingleton&lt;IModuleClient, MockModuleClientWrapper&gt;();
+                    else
+                        services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+
+                    services.AddHostedService&lt;TemperatureSensorModule&gt;();
+                })
+                .UseSerilog((hostingContext, log) =&gt;
+                {
+                    log.ReadFrom.Configuration(hostingContext.Configuration);
+                })
+                .UseConsoleLifetime()
+                .Build())
+            {
+                await host.RunAsync();
+            }
+        }
+    }
+}
+</code></pre><blockquote>Note that we switch from <code>ModuleClientWrapper</code> to <code>MockModuleClientWrapper</code> when in development. This is controlled by the environment variable with name <code>DOTNET_ENVIRONMENT</code>.</blockquote><p>We've seen this code in the previous post, and in the one before that, we saw how to define an abstraction interface for the SDK's <code>ModuleClient</code> so that we can use it in a DI setup. Next, we will add this <code>IModuleClient</code> interface and the two <code>ModuleClientWrapper</code> and <code>MockModuleClientWrapper</code> classes:</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Devices.Shared;
+    using Microsoft.Azure.Devices.Client;
+    
+    public interface IModuleClient
+    {
+        Task OpenAsync(CancellationToken cancellationToken);
+        Task CloseAsync(CancellationToken cancellationToken);
+        Task SendEventAsync(string outputName,
+            Message message);
+        Task SetInputMessageHandlerAsync(string inputName,
+            MessageHandler messageHandler,
+            object userContext);
+        Task SetMethodHandlerAsync(string methodName,
+            MethodCallback methodHandler,
+            object userContext);
+        Task&lt;Twin&gt; GetTwinAsync(CancellationToken cancellationToken);
+        Task&lt;Twin&gt; GetTwinAsync();
+    }
+}</code></pre><p>and the class <code>ModuleClientWrapper</code>:</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using Microsoft.Azure.Devices.Client;
+    using Microsoft.Azure.Devices.Client.Transport.Mqtt;
+    using Microsoft.Azure.Devices.Shared;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public class ModuleClientWrapper : IModuleClient
+    {
+        readonly ModuleClient moduleClient;
+        readonly ILogger logger;
+
+        public ModuleClientWrapper(IConfiguration configuration,
+            ILogger&lt;ModuleClientWrapper&gt; logger)
+        {
+            this.logger = logger;
+
+            var transportType = 
+                configuration.GetValue("ClientTransportType", TransportType.Amqp_Tcp_Only);
+
+            ITransportSettings[] settings = { new MqttTransportSettings(transportType) };
+
+            moduleClient = ModuleClient.CreateFromEnvironmentAsync(settings).Result;
+        }
+
+        public async Task SendEventAsync(string outputName, Message message)
+        {
+            await moduleClient.SendEventAsync(outputName, message);
+        }
+
+        public async Task SetInputMessageHandlerAsync(string inputName,
+            MessageHandler messageHandler,
+            object userContext)
+        {
+            await moduleClient.SetInputMessageHandlerAsync(inputName,
+                messageHandler,
+                userContext);
+        }
+
+        public async Task SetMethodHandlerAsync(string methodName,
+            MethodCallback methodHandler,
+            object userContext)
+        {
+            await moduleClient.SetMethodHandlerAsync(methodName,
+                methodHandler,
+                userContext);
+        }
+        public async Task OpenAsync(CancellationToken cancellationToken)
+        {
+            await moduleClient.OpenAsync(cancellationToken);
+        }
+        public async Task CloseAsync(CancellationToken cancellationToken)
+        {
+            await moduleClient.CloseAsync(cancellationToken);
+        }
+        public async Task&lt;Twin&gt; GetTwinAsync(CancellationToken cancellationToken)
+        {
+            return await moduleClient.GetTwinAsync(cancellationToken);
+        }
+        public async Task&lt;Twin&gt; GetTwinAsync()
+        {
+            return await moduleClient.GetTwinAsync();
+        }
+    }
+}</code></pre><p>And finally here's a mock implementation of the above class. The purpose of this class is to simulate the IoT Edge Runtime behavior for development and testing purposes.</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Devices.Client;
+    using Microsoft.Azure.Devices.Shared;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+
+    internal class MockModuleClientWrapper : IModuleClient
+    {
+        readonly ILogger logger;
+        readonly IHostApplicationLifetime application;
+
+        readonly TaskTimer taskTimer;
+        readonly Dictionary&lt;string, List&lt;Message&gt;&gt; messageQueues;
+        readonly Dictionary&lt;string, ValueTuple&lt;MessageHandler, object&gt;&gt; inputMessageHandlers;
+        readonly Dictionary&lt;string, MethodCallback&gt; methodMessageHandlers;
+
+        public MockModuleClientWrapper(IHostApplicationLifetime application,
+            ILogger&lt;MockModuleClientWrapper&gt; logger)
+        {
+            this.logger = logger;
+            this.application = application;
+
+            messageQueues = new Dictionary&lt;string, List&lt;Message&gt;&gt;();
+            inputMessageHandlers = new Dictionary&lt;string, (MessageHandler, object)&gt;();
+            methodMessageHandlers = new Dictionary&lt;string, MethodCallback&gt;();
+
+            taskTimer = new TaskTimer(OnTimer, TimeSpan.FromSeconds(1), logger);
+        }
+
+        private void OnTimer()
+        {
+            lock (messageQueues)
+                foreach (var queue in messageQueues)
+                {
+                    if (inputMessageHandlers.ContainsKey(queue.Key))
+                        foreach (var message in queue.Value)
+                            inputMessageHandlers[queue.Key].Item1(message, inputMessageHandlers[queue.Key].Item2);
+                    messageQueues[queue.Key].Clear();
+                }
+            // TODO: Process method messsages too
+        }
+
+        public Task SendEventAsync(string outputName, Message message)
+        {
+            lock (messageQueues)
+            {
+                if (!messageQueues.ContainsKey(outputName))
+                    messageQueues[outputName] = new List&lt;Message&gt;();
+                messageQueues[outputName].Add(message);
+            }
+            logger.LogInformation($"Message Sent to {outputName}");
+            return Task.CompletedTask;
+        }
+
+        public Task SetInputMessageHandlerAsync(string inputName, MessageHandler messageHandler, object userContext)
+        {
+            inputMessageHandlers[inputName] = (messageHandler, userContext);
+            logger.LogInformation($"Message Handler Set for {inputName}");
+            return Task.CompletedTask;
+        }
+
+        public Task SetMethodHandlerAsync(string methodName, MethodCallback methodHandler, object userContext)
+        {
+            methodMessageHandlers[methodName] = methodHandler;
+            logger.LogInformation($"Method Handler Set for {methodName}");
+            return Task.CompletedTask;
+        }
+
+        public Task OpenAsync(CancellationToken token)
+        {
+            logger.LogInformation("Opened ModuleClient");
+            taskTimer.Start(application.ApplicationStopping);
+            return Task.CompletedTask;
+        }
+
+        public Task CloseAsync(CancellationToken token)
+        {
+            logger.LogInformation("Closed ModuleClient");
+            return Task.CompletedTask;
+        }
+
+        public Task&lt;Twin&gt; GetTwinAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("GetTwinAsync");
+            return Task.FromResult&lt;Twin&gt;(null);
+        }
+
+        public Task&lt;Twin&gt; GetTwinAsync()
+        {
+            logger.LogInformation("GetTwinAsync");
+            return Task.FromResult&lt;Twin&gt;(null);
+        }
+    }
+}</code></pre><p>We have almost everything in place. The last missing piece is to implement the <code>TemperatureSensorModule</code> class, the class that will contain the <em>business logic </em>of our IoT Edge application. This module will periodically emit messages, simulating a temperature sensor. </p><p>Following the same approach we did <a href="/the-man-who-wouldnt-test/">last time</a>, this class will implement the <code>IHostedService</code>. We will include an <code>IHostApplicationLifetime</code> depedency to gain control on the application lifetime and trigger a restart in case something goes terribly wrong. Finally, we'll use an updated version of the <code><a href="/the-waiting-loop/">TaskTimer</a></code>we saw in a <a href="/the-man-who-wouldnt-test/">previous post</a> to driver the telemetry loop:</p><p>Here's the <code>TaskTimer</code> class:</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
+
+    public class TaskTimer
+    {
+        readonly Action onTimer;
+        readonly TimeSpan timerPeriod;
+        readonly Action onError;
+        readonly ILogger logger;
+
+        public TaskTimer(Action onTimer,
+            TimeSpan timerPeriod,
+            ILogger logger,
+            Action onError = null)
+        {
+            this.timerPeriod = timerPeriod;
+            this.onTimer = onTimer;
+            this.logger = logger;
+            this.onError = onError;
+        }
+
+        public void Start(CancellationToken token)
+        {
+            Task elapsedTask = null;
+            elapsedTask = new Task((x) =&gt;
+            {
+                OnTimer(elapsedTask, token);
+            }, token);
+
+            HandleError(elapsedTask, token);
+
+            elapsedTask.Start();
+        }
+
+        private void OnTimer(Task task, object objParam)
+        {
+            var start = DateTime.Now;
+            var token = (CancellationToken)objParam;
+
+            if (token.IsCancellationRequested)
+            {
+                logger.LogInformation("A cancellation has been requested.");
+                return;
+            }
+
+            onTimer();
+
+            var delay = timerPeriod - (DateTime.Now - start);
+            if (delay.Ticks &gt; 0)
+            {
+                task = Task.Delay(delay);
+            }
+            HandleError(task.ContinueWith(OnTimer, token), token);
+        }
+
+        private void HandleError(Task task, CancellationToken token)
+        {
+            task.ContinueWith((e) =&gt;
+            {
+                logger.LogError(
+                    $"Exception when running timer callback: {e.Exception}");
+
+                onError?.Invoke();
+                if (!token.IsCancellationRequested)
+                    task.ContinueWith(OnTimer, token);
+
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+    }
+}</code></pre><p>Here's the code of the <code>TemperatureSensorModule</code>:</p><pre><code class="language-csharp">
+namespace SimulatedTemperatureSensor
+{
+    using Microsoft.Azure.Devices.Client;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public class TemperatureSensorModule : IHostedService
+    {
+        const string SAMPLING_PERIOD_CONFIG_NAME = "TelemetryPeriodSeconds";
+        const int SAMPLING_PERIOD_DEFAULT = 1;
+        
+        readonly IModuleClient moduleClient;
+        readonly ILogger logger;
+        readonly IHostApplicationLifetime application;
+        
+        readonly Random random = new Random();
+        readonly TaskTimer telemetryPump;
+
+        public TemperatureSensorModule(IModuleClient moduleClient,
+            IConfiguration config,
+            IHostApplicationLifetime application, 
+            ILogger&lt;TemperatureSensorModule&gt; logger)
+        {
+            this.moduleClient = moduleClient;
+            this.logger = logger;
+            this.application = application;
+
+            var period = TimeSpan.FromSeconds(
+                config.GetValue(SAMPLING_PERIOD_CONFIG_NAME, SAMPLING_PERIOD_DEFAULT));
+
+            telemetryPump = new TaskTimer(OnTimer, period, logger, application.StopApplication);
+            
+            application.ApplicationStopping.Register(() =&gt;
+            {
+                logger.LogWarning("Stop-draining application for 3 seconds...");
+                Task.Delay(TimeSpan.FromSeconds(3)).Wait();
+            });
+        }
+
+        private async void OnTimer()
+        {
+            await moduleClient.SendEventAsync("telemetry",
+                new Message(Encoding.UTF8.GetBytes($"Current temperature: {random.Next(0, 100)}")));
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            await moduleClient.OpenAsync(cancellationToken);
+            telemetryPump.Start(application.ApplicationStopping);
+
+            logger.LogInformation("Started.");
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await moduleClient.CloseAsync(cancellationToken);
+            logger.LogInformation("Stopped.");
+        }
+    }
+}
+</code></pre><p>This is the <code>appSettings.json</code> content that configures our Serilog logger:</p><pre><code class="language-json">{
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console" ],
+    "MinimumLevel": {
+      "Default": "Debug"
+    },
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [{ThreadId}] - {Message}{NewLine}{Exception}"
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithThreadId" ]
+  }
+}</code></pre><p>This the project file structure so far:</p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-35.png" class="kg-image"></figure><p>Our first version is ready. Set the <code>DOTNET_ENVIRONMENT</code> environment variable to <code>Development</code> and hit F5 to run the application. Hit <code>CTRL+C</code> to gracefully stop it.</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/dev-ex-large.gif" class="kg-image"></figure><h3 id="recap">Recap</h3><p>Following this approach, we are allowing ourselves to <strong>develop most the Edge application as a console app, </strong>using the most easy F5 development experience, without any prior setup.</p><p><a href="/lysis/">Next</a>, we will see how we can gradually transform this environment to becoming our Azure IoT Edge development environment, without sacrificing any flexibility once so ever! </p>
+                </div>
+            </section>
+
+
+            <footer class="post-full-footer">
+
+
+                    
+<section class="author-card">
+        <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+    <section class="author-card-content">
+        <h4 class="author-card-name"><a href="/author/spyros/">Spyros Garyfallos</a></h4>
+            <p>Read <a href="/author/spyros/">more posts</a> by this author.</p>
+    </section>
+</section>
+<div class="post-full-footer-right">
+    <a class="author-card-button" href="/author/spyros/">Read More</a>
+</div>
+
+
+            </footer>
+
+            
+            <section class="post-full-comments">
+                <div id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function () {
+                        this.page.url = "https://havedatawilltrain.com/genesis/";  
+                        this.page.identifier = "ghost-5e9dd9c7d47c36006e770c3f"
+                    };
+                    (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://have-data-will-train.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            </section>
+            
+
+        </article>
+
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+                <article class="read-next-card"
+                            style="background-image: url(/content/images/size/w600/2019/07/blog-cover2.jpg)"
+                >
+                    <header class="read-next-card-header">
+                        <small class="read-next-card-header-sitetitle">&mdash; HAVE DATA - WILL TRAIN &mdash;</small>
+                        <h3 class="read-next-card-header-title"><a href="/tag/azure-iot-edge/">Azure IoT Edge</a></h3>
+                    </header>
+                    <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
+</div>
+                    <div class="read-next-card-content">
+                        <ul>
+                            <li><a href="/lysis/">Lysis</a></li>
+                            <li><a href="/the-man-who-wouldnt-test/">The Man Who Wouldn&#x27;t Test</a></li>
+                            <li><a href="/the-reasonable-man/">The Reasonable Man</a></li>
+                        </ul>
+                    </div>
+                    <footer class="read-next-card-footer">
+                        <a href="/tag/azure-iot-edge/">See all 8 posts →</a>
+                    </footer>
+                </article>
+
+                <article class="post-card post tag-azure-iot-edge ">
+
+    <a class="post-card-image-link" href="/lysis/">
+        <img class="post-card-image"
+            srcset="/content/images/size/w300/2020/04/bike-no-hands.jpg 300w,
+                    /content/images/size/w600/2020/04/bike-no-hands.jpg 600w,
+                    /content/images/size/w1000/2020/04/bike-no-hands.jpg 1000w,
+                    /content/images/size/w2000/2020/04/bike-no-hands.jpg 2000w"
+            sizes="(max-width: 1000px) 400px, 700px"
+            src="/content/images/size/w600/2020/04/bike-no-hands.jpg"
+            alt="Lysis"
+        />
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/lysis/">
+
+            <header class="post-card-header">
+                    <span class="post-card-tags">Azure IoT Edge</span>
+                <h2 class="post-card-title">Lysis</h2>
+            </header>
+
+            <section class="post-card-excerpt">
+                <p>This is the ninth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a custom emulated IoT Edge Runtime.</p>
+            </section>
+
+        </a>
+
+        <footer class="post-card-meta">
+
+            <ul class="author-list">
+                <li class="author-list-item">
+
+                    <div class="author-name-tooltip">
+                        Spyros Garyfallos
+                    </div>
+
+                        <a href="/author/spyros/" class="static-avatar">
+                            <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+                        </a>
+                </li>
+            </ul>
+
+            <span class="reading-time">6 min read</span>
+
+        </footer>
+
+    </div>
+
+</article>
+
+                <article class="post-card post tag-azure-iot-edge ">
+
+    <a class="post-card-image-link" href="/the-man-who-wouldnt-test/">
+        <img class="post-card-image"
+            srcset="/content/images/size/w300/2020/04/pussel_dusk_closeup.jpg 300w,
+                    /content/images/size/w600/2020/04/pussel_dusk_closeup.jpg 600w,
+                    /content/images/size/w1000/2020/04/pussel_dusk_closeup.jpg 1000w,
+                    /content/images/size/w2000/2020/04/pussel_dusk_closeup.jpg 2000w"
+            sizes="(max-width: 1000px) 400px, 700px"
+            src="/content/images/size/w600/2020/04/pussel_dusk_closeup.jpg"
+            alt="The Man Who Wouldn&#x27;t Test"
+        />
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/the-man-who-wouldnt-test/">
+
+            <header class="post-card-header">
+                    <span class="post-card-tags">Azure IoT Edge</span>
+                <h2 class="post-card-title">The Man Who Wouldn&#x27;t Test</h2>
+            </header>
+
+            <section class="post-card-excerpt">
+                <p>This is the seventh post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of dependency injection.</p>
+            </section>
+
+        </a>
+
+        <footer class="post-card-meta">
+
+            <ul class="author-list">
+                <li class="author-list-item">
+
+                    <div class="author-name-tooltip">
+                        Spyros Garyfallos
+                    </div>
+
+                        <a href="/author/spyros/" class="static-avatar">
+                            <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+                        </a>
+                </li>
+            </ul>
+
+            <span class="reading-time">6 min read</span>
+
+        </footer>
+
+    </div>
+
+</article>
+
+        </div>
+    </div>
+</aside>
+
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://havedatawilltrain.com">
+                <img src="/content/images/size/w30/2019/07/icon.png" alt="HAVE DATA - WILL TRAIN icon" />
+            <span>HAVE DATA - WILL TRAIN</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">Genesis</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=Genesis&amp;url=https://havedatawilltrain.com/genesis/"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://havedatawilltrain.com/genesis/"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+        </a>
+    </div>
+    <progress id="reading-progress" class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="https://havedatawilltrain.com">Latest Posts</a>
+                    <a href="https://www.linkedin.com/in/spirosgarifallos/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://twitter.com/SpyrosCarnation" target="_blank" rel="noopener">Twitter</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <script>
+        var images = document.querySelectorAll('.kg-gallery-image img');
+        images.forEach(function (image) {
+            var container = image.closest('.kg-gallery-image');
+            var width = image.attributes.width.value;
+            var height = image.attributes.height.value;
+            var ratio = width / height;
+            container.style.flex = ratio + ' 1 0%';
+        })
+    </script>
+
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=d0538246fb"></script>
+
+
+    <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('#reading-progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+
+});
+</script>
+
+
+    <!-- script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-csharp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-python.min.js"></script>
+
+</body>
+</html>

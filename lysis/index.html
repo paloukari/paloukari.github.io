@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Lysis</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=d0538246fb" />
+
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://havedatawilltrain.com/lysis/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="amphtml" href="https://havedatawilltrain.com/lysis/amp/" />
+    
+    <meta property="og:site_name" content="HAVE DATA - WILL TRAIN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Lysis" />
+    <meta property="og:description" content="This is the ninth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a custom emulated IoT Edge Runtime." />
+    <meta property="og:url" content="https://havedatawilltrain.com/lysis/" />
+    <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg" />
+    <meta property="article:published_time" content="2020-04-22T23:29:26.000Z" />
+    <meta property="article:modified_time" content="2020-04-22T23:47:35.000Z" />
+    <meta property="article:tag" content="Azure IoT Edge" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta property="article:author" content="https://www.facebook.com/spyros.garyfallos" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Lysis" />
+    <meta name="twitter:description" content="This is the ninth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a custom emulated IoT Edge Runtime." />
+    <meta name="twitter:url" content="https://havedatawilltrain.com/lysis/" />
+    <meta name="twitter:image" content="https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Spyros Garyfallos" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Azure IoT Edge" />
+    <meta name="twitter:site" content="@SpyrosCarnation" />
+    <meta name="twitter:creator" content="@SpyrosCarnation" />
+    <meta property="og:image:width" content="1100" />
+    <meta property="og:image:height" content="656" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "HAVE DATA - WILL TRAIN",
+        "url": "https://havedatawilltrain.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/07/Logo2.png"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Spyros Garyfallos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://havedatawilltrain.com/content/images/2019/09/Capture.PNG",
+            "width": 375,
+            "height": 439
+        },
+        "url": "https://havedatawilltrain.com/author/spyros/",
+        "sameAs": [
+            "https://www.facebook.com/spyros.garyfallos",
+            "https://twitter.com/SpyrosCarnation"
+        ]
+    },
+    "headline": "Lysis",
+    "url": "https://havedatawilltrain.com/lysis/",
+    "datePublished": "2020-04-22T23:29:26.000Z",
+    "dateModified": "2020-04-22T23:47:35.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg",
+        "width": 1100,
+        "height": 656
+    },
+    "keywords": "Azure IoT Edge",
+    "description": "This is the ninth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a custom emulated IoT Edge Runtime.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://havedatawilltrain.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 3.12" />
+    <link rel="alternate" type="application/rss+xml" title="HAVE DATA - WILL TRAIN" href="https://havedatawilltrain.com/rss/" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148729349-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-148729349-1');
+</script>
+
+<!-- link tag -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" />
+
+<style> pre[class*="language-"] { font-size: 0.75em; } </style>
+
+</head>
+<body class="post-template tag-azure-iot-edge">
+
+    <div class="site-wrapper">
+
+        
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+                <a class="site-nav-logo" href="https://havedatawilltrain.com"><img src="/content/images/2019/07/Logo2.png" alt="HAVE DATA - WILL TRAIN" /></a>
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="https://havedatawilltrain.com/">Home</a></li>
+    <li class="nav-author" role="menuitem"><a href="https://havedatawilltrain.com/author/spyros/">Author</a></li>
+</ul>
+
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+                <a class="social-link social-link-fb" href="https://www.linkedin.com/in/spirosgarifallos/" title="Linkedin" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+width="26" height="26"
+viewBox="0 0 192 192"
+style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,192v-192h192v192z" fill="none"></path><g fill="#ffffff"><g id="surface1"><path d="M156,0h-120c-19.875,0 -36,16.125 -36,36v120c0,19.875 16.125,36 36,36h120c19.875,0 36,-16.125 36,-36v-120c0,-19.875 -16.125,-36 -36,-36zM59.36539,162.98077h-29.82693l-0.17307,-89.30769h29.82692zM43.70192,61.99038h-0.17308c-9.75,0 -16.03846,-6.72115 -16.03846,-15.08653c0,-8.56731 6.49039,-15.0577 16.41347,-15.0577c9.92308,0 16.00961,6.49038 16.21153,15.0577c0,8.36538 -6.31731,15.08653 -16.41346,15.08653zM162.77885,162.98077h-30.08654v-48.51923c0,-11.74039 -3.11538,-19.73077 -13.61538,-19.73077c-8.01923,0 -12.34615,5.39423 -14.42308,10.61538c-0.77885,1.875 -0.98077,4.44231 -0.98077,7.06731v50.56731h-30.23077l-0.17308,-89.30769h30.23077l0.17308,12.60577c3.86538,-5.97116 10.29808,-14.42308 25.70192,-14.42308c19.09616,0 33.37501,12.46154 33.37501,39.25961v51.86539z"></path></g></g></g></svg></a>
+                <a class="social-link social-link-tw" href="https://twitter.com/SpyrosCarnation" title="Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+        </div>
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/https://havedatawilltrain.com/rss/" title="RSS" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+</a>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <article class="post-full post tag-azure-iot-edge ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="2020-04-22">22 April 2020</time>
+                        <span class="date-divider">/</span> <a href="/tag/azure-iot-edge/">Azure IoT Edge</a>
+                </section>
+                <h1 class="post-full-title">Lysis</h1>
+            </header>
+
+            <figure class="post-full-image">
+                <img
+                    srcset="/content/images/size/w300/2020/04/bike-no-hands.jpg 300w,
+                            /content/images/size/w600/2020/04/bike-no-hands.jpg 600w,
+                            /content/images/size/w1000/2020/04/bike-no-hands.jpg 1000w,
+                            /content/images/size/w2000/2020/04/bike-no-hands.jpg 2000w"
+                    sizes="(max-width: 800px) 400px,
+                            (max-width: 1170px) 700px,
+                            1400px"
+                    src="/content/images/size/w2000/2020/04/bike-no-hands.jpg"
+                    alt="Lysis"
+                />
+            </figure>
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    <p>In the <a href="/genesis/">last post</a> we saw how to setup an F5 development experience for an IoT Edge application, without having to install the IoT Edge Runtime or any other tool on our localhost. In this post, we will see how to setup the same F5 experience, but with the actual IoT Edge Runtime. </p><h3 id="emulating-iot-edge-runtime">Emulating IoT Edge Runtime  </h3><p>Unfortunately, currently there is <strong>no development IoT Edge server</strong>, but we can build one!</p><blockquote>I have found that the effort of installing the runtime locally exceeds the effort of building a customer emulator.</blockquote><p>To setup this development server, we will need to build a custom tool in C#.</p><p>Let's create an new .NET Core console app next to the <code>SimulatedTemperatureSensor</code> that will hold all of our development tools:</p><pre><code class="language-bash">cd ..
+mkdir DevelopmentTools
+cd DevelopmentTools
+dotnet new console
+dotnet add package Microsoft.Azure.Devices
+dotnet add package Docker.DotNet
+code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provision a <strong>development device.</strong></li><li>Create and push the appropriate <strong>development deployment manifest.</strong></li><li><strong>Run this device locally.</strong></li></ol><blockquote>We need access to a running edge daemon and an edgeHub that our code will talk to. This communication is secure, and because of that, we need first to create the <strong>module identity to use</strong>.</blockquote><p>Here's the <code>Program.cs</code>:</p><pre><code class="language-csharp">namespace DevelopmenntTools
+{
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            if (args.Length != 3)
+            {
+                Console.WriteLine("Usage: dotnet run {MANIFEST_FILE} {DEVICE_ID} " +
+                "{IOT_HUB_OWNER_COONECTION_STRING}");
+                return;
+            }
+            var developmentManifest = Utilities.CreateDevelopmentManifest(
+                File.ReadAllText(args[0]));
+
+            var deviceConnectionString =
+                await Utilities.ProvisionDeviceAsync(args[1],
+                developmentManifest,
+                args[2]);
+
+            await Utilities.StartEmulatorAsync(deviceConnectionString);
+        }
+    }
+}
+</code></pre><p>We need to create a <code>Utilities.cs</code> file where we'll put the referenced three functions from above:</p><pre><code class="language-csharp">namespace DevelopmenntTools
+{
+    using Docker.DotNet;
+    using Docker.DotNet.Models;
+    using Microsoft.Azure.Devices;
+    using Microsoft.Azure.Devices.Shared;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
+
+    public static class Utilities
+    {
+        public static async Task StartEmulatorAsync(string deviceConnectionString)
+        {
+            string deviceContainerImage = "toolboc/azure-iot-edge-device-container";
+            int[] exposedPorts = new[] { 15580, 15581, 443, 8883, 5671 };
+            string imageName = "dev_iot_edge";
+
+            var localDockerSocket = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                @"npipe://./pipe/docker_engine" :
+                @"unix:/var/run/docker.sock";
+
+            var dockerClient = new DockerClientConfiguration(new Uri(localDockerSocket))
+                .CreateClient();
+
+            Console.WriteLine($"Downloading the latest image:{deviceContainerImage}..");
+
+            await dockerClient.Images.CreateImageAsync(
+                new ImagesCreateParameters
+                {
+                    FromImage = deviceContainerImage,
+                    Tag = "latest"
+                },
+                new AuthConfig(),
+                new Progress&lt;JSONMessage&gt;((e) =&gt;
+                {
+                    if (!string.IsNullOrEmpty(e.Status))
+                        Console.Write($"{e.Status}");
+                    if (!string.IsNullOrEmpty(e.Status))
+                        Console.Write($"{e.ProgressMessage}");
+                    if (!string.IsNullOrEmpty(e.Status))
+                        Console.Write($"{e.ErrorMessage}");
+                    Console.WriteLine("");
+                }));
+
+            var containers = await dockerClient.Containers
+                .ListContainersAsync(new ContainersListParameters() { All = true });
+
+            foreach (var _container in containers)
+            {
+                if (_container.Names.Contains(imageName) || 
+                    _container.Names.Contains($@"/{imageName}"))
+                {
+                    if (_container.State == "running")
+                    {
+                        Console.WriteLine($"Stopping container {_container.ID}..");
+                        await dockerClient.Containers.StopContainerAsync(_container.ID,
+                            new ContainerStopParameters());
+                    }
+                    Console.WriteLine($"Removing container {_container.ID}..");
+                    await dockerClient.Containers.RemoveContainerAsync(_container.ID,
+                        new ContainerRemoveParameters());
+                    break;
+                }
+            }
+
+            Console.WriteLine($"Creating {imageName} container..");
+            var container = await dockerClient.Containers
+                .CreateContainerAsync(new CreateContainerParameters
+            {
+                AttachStderr = true,
+                AttachStdin = true,
+                AttachStdout = true,
+                Tty = true,
+                Env = new List&lt;string&gt;() { $"connectionString={deviceConnectionString}" },
+
+                Name = imageName,
+                Image = deviceContainerImage,
+                ExposedPorts = exposedPorts
+                    .ToDictionary(x =&gt; x.ToString(), x =&gt; default(EmptyStruct)),
+                HostConfig = new HostConfig
+                {
+                    Privileged = true,
+                    PortBindings = exposedPorts.ToDictionary(
+                        x =&gt; x.ToString(),
+                        x =&gt; (IList&lt;PortBinding&gt;)new List&lt;PortBinding&gt; {
+                            new PortBinding {
+                                HostPort = x.ToString()
+                            }
+                        }),
+                    PublishAllPorts = true
+                }
+            });
+            Console.WriteLine($"Starting {imageName} container..");
+            var startResult = await dockerClient.Containers.StartContainerAsync(
+                container.ID, null);
+
+            if (!startResult)
+                throw new Exception($"Cound not start the {imageName} container!");
+
+            Console.WriteLine("Done.");
+        }
+        public static string CreateDevelopmentManifest(string template)
+        {
+            var templateContent = JsonConvert
+                .DeserializeObject&lt;ConfigurationContent&gt;(template);
+            
+            var agentDesired = JObject.FromObject(
+                   templateContent.ModulesContent["$edgeAgent"]["properties.desired"]);
+
+            if (!agentDesired.TryGetValue("modules", out var modulesSection))
+                throw new Exception("Cannot read modules config from $edgeAgent");
+
+            foreach (var module in modulesSection as JObject)
+            {
+                var moduleSettings = JObject.FromObject(modulesSection[module.Key]["settings"]);
+                moduleSettings["image"] = "wardsco/sleep:latest";
+                modulesSection[module.Key]["settings"] = moduleSettings;
+            }
+            agentDesired["modules"] = modulesSection;
+            templateContent.ModulesContent["$edgeAgent"]["properties.desired"]
+                = agentDesired;
+
+
+            return JsonConvert.SerializeObject(templateContent, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+        }
+        public static async Task&lt;string&gt; ProvisionDeviceAsync(
+            string deviceId,
+            string manifest,
+            string ioTHubConnectionString)
+        {
+            var registryManager = RegistryManager
+                .CreateFromConnectionString(ioTHubConnectionString);
+
+            var hostName = ioTHubConnectionString.Split(";")
+                .SingleOrDefault(e =&gt; e.Contains("HostName="));
+
+            if (string.IsNullOrEmpty(hostName))
+                throw new ArgumentException(
+                    $"Invalid ioTHubConnectionString: {ioTHubConnectionString}");
+            hostName = hostName.Replace("HostName=", "");
+
+            var device = await registryManager.GetDeviceAsync(deviceId) ??
+                await registryManager.AddDeviceAsync(
+                    new Device(deviceId)
+                    {
+                        Capabilities = new DeviceCapabilities() { IotEdge = true }
+                    });
+
+            var sasKey = device.Authentication.SymmetricKey.PrimaryKey;
+
+            var manifestContent = JsonConvert
+                .DeserializeObject&lt;ConfigurationContent&gt;(manifest);
+
+            // remove all old modules
+            foreach (var oldModule in await registryManager.GetModulesOnDeviceAsync(deviceId))
+                if (!oldModule.Id.StartsWith("$"))
+                    await registryManager.RemoveModuleAsync(oldModule);
+            // create new modules
+            foreach (var module in manifestContent.ModulesContent.Keys)
+                if (!module.StartsWith("$"))
+                    await registryManager.AddModuleAsync(new Module(deviceId, module));
+
+            await registryManager
+                .ApplyConfigurationContentOnDeviceAsync(deviceId, manifestContent);
+
+            return $"HostName={hostName};DeviceId={deviceId};SharedAccessKey={sasKey}";
+        }
+    }
+}
+</code></pre><p>Finally, we will need a deployment manifest file to use as a template. Here are the contents of the application <code>manifest.json</code>:</p><blockquote>I prefer putting this file at the root directory level of the <strong>solution.</strong></blockquote><pre><code class="language-json">{
+	"modulesContent": {
+		"$edgeAgent": {
+			"properties.desired": {
+				"schemaVersion": "1.0",
+				"runtime": {
+					"type": "docker",
+					"settings": {
+						"minDockerVersion": "v1.25",
+						"loggingOptions": "",
+						"registryCredentials": {
+						}
+					}
+				},
+				"systemModules": {
+					"edgeAgent": {
+						"type": "docker",
+						"settings": {
+							"image": "mcr.microsoft.com/azureiotedge-agent:1.0.9",
+							"createOptions": ""
+						}
+					},
+					"edgeHub": {
+						"type": "docker",
+						"status": "running",
+						"restartPolicy": "always",
+						"settings": {
+							"image": "mcr.microsoft.com/azureiotedge-hub:1.0.9",
+							"createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+						}
+					}
+				},
+				"modules": {
+					"SimulatedTemperatureSensor": {
+						"version": "1.0",
+						"type": "docker",
+						"status": "running",
+						"restartPolicy": "always",
+						"settings": {
+							"image": "your.azurecr.io/simulatedtemperaturesensor:latest",
+							"createOptions": "{}"
+						}
+					}
+				}
+			}
+		},
+		"$edgeHub": {
+			"properties.desired": {
+				"schemaVersion": "1.0",
+				"routes": {
+					"allToIoTHub": "FROM /* INTO $upstream"
+				},
+				"storeAndForwardConfiguration": {
+					"timeToLiveSecs": 10
+				}
+			}
+		},
+		"SimulatedTemperatureSensor": {
+			"properties.desired": {
+				"SendInterval": 1
+			}
+		}
+	}
+}</code></pre><blockquote>Note: you can modify this manifest to match our application requirements, like <strong>add more modules</strong>, define <strong>module twins</strong>, change the <strong>routes </strong>etc. The tool will simply replace the container image with a mock container.</blockquote><p>Done! Let's run this console application passing the required arguments: </p><pre><code class="language-shell">dotnet run ../manifest.json dev_device "IOT HUB OWNER CONNECTION STRING"</code></pre><p>The effect of this execution is that we now have a development IoT Edge device running in a local container, called <code>dev_iot_edge</code>. This container exposes the edge daemon and the edgeHub's ports to our host. All we have to do now us connect to it from our code.</p><p>To do that, we need to set some environment variables so that the IoT SDK can connect securely to the emulator. These variable have the prefix <code>IOTEDGE_</code> and we can get them from the running module inside the emulator: <code>docker exec dev_iot_edge bash -c "docker exec SimulatedTemperatureSensor env | grep IOTEDGE_"</code></p><figure class="kg-card kg-image-card"><img src="https://havedatawilltrain.com/content/images/2020/04/image-38.png" class="kg-image"></figure><p>We need to override the <code>IOTEDGE_GATEWAYHOSTNAME</code> with our host's name, and change the IP of the <code>IOTEDGE_WORKLOADURI</code> with <code>127.0.0.1</code>.</p><p>Setting these environment variables in our application will allow us to connect to the running emulator!</p><p>In practice, it's very easy to automate this process, with this helper function:</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Net;
+    internal static class Utilities
+    {
+        internal static void InjectIoTEdgeVariables(string containerName)
+        {
+            var dockerCommand =
+                $"docker exec dev_iot_edge bash -c \"docker exec {containerName} env | grep IOTEDGE_\"";
+            Process p = new Process()
+            {
+                StartInfo = new ProcessStartInfo(dockerCommand)
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/C {dockerCommand}",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                },
+            };
+            p.Start();
+            p.WaitForExit();
+
+            var output = p.StandardOutput.ReadToEnd();
+            var lines = output.Split(new[] { "\n" }, StringSplitOptions.None)
+                .Where(e =&gt; e != null &amp;&amp; e.Contains("="));
+
+            var variables = lines.ToDictionary(e =&gt; e.Split("=")[0], e =&gt; e.Split("=")[1]);
+
+            // Overwrite these settigns
+            variables["IOTEDGE_WORKLOADURI"] = "http://127.0.0.1:15581/";
+            variables["IOTEDGE_GATEWAYHOSTNAME"] = Dns.GetHostName();
+            foreach (var variable in variables)
+            {
+                Environment.SetEnvironmentVariable(variable.Key, variable.Value);
+                Console.WriteLine($"Injected {variable.Key}={variable.Value}");
+            }
+        }
+    }
+}</code></pre><p> Then, when we're in the <code>Emulated</code> environment, we can automatically call this method from our application start up.</p><pre><code class="language-csharp">namespace SimulatedTemperatureSensor
+{
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            using (var host = Host.CreateDefaultBuilder(args)
+                 .ConfigureServices((hostContext, services) =&gt;
+                 {
+                     if (hostContext.HostingEnvironment.EnvironmentName == "Emulated")
+                         Utilities.InjectIoTEdgeVariables("SimulatedTemperatureSensor");
+
+                     services.AddSingleton&lt;IModuleClient, ModuleClientWrapper&gt;();
+                     services.AddHostedService&lt;TemperatureSensorModule&gt;();
+                 })
+                 .UseSerilog((hostingContext, log) =&gt;
+                 {
+                     log.ReadFrom.Configuration(hostingContext.Configuration);
+                 })
+                 .UseConsoleLifetime()
+                 .Build())
+            {
+                await host.RunAsync();
+            }
+        }
+    }
+}
+</code></pre><blockquote>Note: you don't need to design your IoT Edge module project as done above, even the monolithic C# template works with this approach. In fact, all supported programming languages will work!</blockquote><h3 id="module-container">Module Container </h3><p>After completing out implementation and testing, we need to build the module container image. This is easily done, both in VS Code and Visual Studio.</p><p>In Visual Studio:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSDocker.gif" class="kg-image"></figure><p>In VS Code:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSCodeDocker.gif" class="kg-image"></figure><p>Both tools will automatically populate the required Dockerfile, and will setup the <strong>build and run</strong> tasks. Simply hit <code>CTRL+SHIFT+B</code> to trigger the image build.</p><blockquote>Now you can even debug the same application running on a Linux container!</blockquote><p>Last step is to push this container to your container registry, set in the manifest to be <code>your.azurecr.io</code> and set the container registry credentials if any. </p><p>The entire application is published in <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this GitHub repo</a>.</p><h3 id="recap">Recap</h3><p>We saw how to setup an F5 development experience without using any tools, but just Docker and our C# code. This approach allows us to keep the same favorite development environment of our preference, without making any compromises.</p>
+                </div>
+            </section>
+
+
+            <footer class="post-full-footer">
+
+
+                    
+<section class="author-card">
+        <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+    <section class="author-card-content">
+        <h4 class="author-card-name"><a href="/author/spyros/">Spyros Garyfallos</a></h4>
+            <p>Read <a href="/author/spyros/">more posts</a> by this author.</p>
+    </section>
+</section>
+<div class="post-full-footer-right">
+    <a class="author-card-button" href="/author/spyros/">Read More</a>
+</div>
+
+
+            </footer>
+
+            
+            <section class="post-full-comments">
+                <div id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function () {
+                        this.page.url = "https://havedatawilltrain.com/lysis/";  
+                        this.page.identifier = "ghost-5e9f74c4d47c36006e77105e"
+                    };
+                    (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://have-data-will-train.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            </section>
+            
+
+        </article>
+
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+                <article class="read-next-card"
+                            style="background-image: url(/content/images/size/w600/2019/07/blog-cover2.jpg)"
+                >
+                    <header class="read-next-card-header">
+                        <small class="read-next-card-header-sitetitle">&mdash; HAVE DATA - WILL TRAIN &mdash;</small>
+                        <h3 class="read-next-card-header-title"><a href="/tag/azure-iot-edge/">Azure IoT Edge</a></h3>
+                    </header>
+                    <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
+</div>
+                    <div class="read-next-card-content">
+                        <ul>
+                            <li><a href="/genesis/">Genesis</a></li>
+                            <li><a href="/the-man-who-wouldnt-test/">The Man Who Wouldn&#x27;t Test</a></li>
+                            <li><a href="/the-reasonable-man/">The Reasonable Man</a></li>
+                        </ul>
+                    </div>
+                    <footer class="read-next-card-footer">
+                        <a href="/tag/azure-iot-edge/">See all 8 posts →</a>
+                    </footer>
+                </article>
+
+
+                <article class="post-card post tag-azure-iot-edge ">
+
+    <a class="post-card-image-link" href="/genesis/">
+        <img class="post-card-image"
+            srcset="/content/images/size/w300/2020/04/genesis.jpg 300w,
+                    /content/images/size/w600/2020/04/genesis.jpg 600w,
+                    /content/images/size/w1000/2020/04/genesis.jpg 1000w,
+                    /content/images/size/w2000/2020/04/genesis.jpg 2000w"
+            sizes="(max-width: 1000px) 400px, 700px"
+            src="/content/images/size/w600/2020/04/genesis.jpg"
+            alt="Genesis"
+        />
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/genesis/">
+
+            <header class="post-card-header">
+                    <span class="post-card-tags">Azure IoT Edge</span>
+                <h2 class="post-card-title">Genesis</h2>
+            </header>
+
+            <section class="post-card-excerpt">
+                <p>This is the eight post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of the development experience with a mocked runtime.</p>
+            </section>
+
+        </a>
+
+        <footer class="post-card-meta">
+
+            <ul class="author-list">
+                <li class="author-list-item">
+
+                    <div class="author-name-tooltip">
+                        Spyros Garyfallos
+                    </div>
+
+                        <a href="/author/spyros/" class="static-avatar">
+                            <img class="author-profile-image" src="/content/images/size/w100/2019/09/Capture.PNG" alt="Spyros Garyfallos" />
+                        </a>
+                </li>
+            </ul>
+
+            <span class="reading-time">7 min read</span>
+
+        </footer>
+
+    </div>
+
+</article>
+
+        </div>
+    </div>
+</aside>
+
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://havedatawilltrain.com">
+                <img src="/content/images/size/w30/2019/07/icon.png" alt="HAVE DATA - WILL TRAIN icon" />
+            <span>HAVE DATA - WILL TRAIN</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">Lysis</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=Lysis&amp;url=https://havedatawilltrain.com/lysis/"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://havedatawilltrain.com/lysis/"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+        </a>
+    </div>
+    <progress id="reading-progress" class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://havedatawilltrain.com">HAVE DATA - WILL TRAIN</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="https://havedatawilltrain.com">Latest Posts</a>
+                    <a href="https://www.linkedin.com/in/spirosgarifallos/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://twitter.com/SpyrosCarnation" target="_blank" rel="noopener">Twitter</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <script>
+        var images = document.querySelectorAll('.kg-gallery-image img');
+        images.forEach(function (image) {
+            var container = image.closest('.kg-gallery-image');
+            var width = image.attributes.width.value;
+            var height = image.attributes.height.value;
+            var ratio = width / height;
+            container.style.flex = ratio + ' 1 0%';
+        })
+    </script>
+
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=d0538246fb"></script>
+
+
+    <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('#reading-progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+
+});
+</script>
+
+
+    <!-- script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-csharp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-python.min.js"></script>
+
+</body>
+</html>
