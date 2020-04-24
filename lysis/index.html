@@ -9,7 +9,7 @@
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=d0538246fb" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=2257888ceb" />
 
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
     <link rel="canonical" href="https://havedatawilltrain.com/lysis/" />
@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com/lysis/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg" />
     <meta property="article:published_time" content="2020-04-22T23:29:26.000Z" />
-    <meta property="article:modified_time" content="2020-04-23T02:37:38.000Z" />
+    <meta property="article:modified_time" content="2020-04-24T16:24:17.000Z" />
     <meta property="article:tag" content="Azure IoT Edge" />
     
     <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
@@ -73,7 +73,7 @@
     "headline": "Lysis",
     "url": "https://havedatawilltrain.com/lysis/",
     "datePublished": "2020-04-22T23:29:26.000Z",
-    "dateModified": "2020-04-23T02:37:38.000Z",
+    "dateModified": "2020-04-24T16:24:17.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg",
@@ -170,7 +170,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
 
             <section class="post-full-content">
                 <div class="post-content">
-                    <p>In the <a href="/genesis/">last post</a> we saw how to setup an F5 development experience for an IoT Edge application, without having to install the IoT Edge Runtime or any other tool on our localhost, but rather by mocking the runtime's behavior in one of our mock dependencies. In this post, we will see how to setup the same F5 experience, but with using the actual IoT Edge Runtime. </p><h3 id="emulating-iot-edge-runtime">Emulating IoT Edge Runtime  </h3><p>Unfortunately, currently there is <strong>no development IoT Edge server</strong>, but we can build one!</p><blockquote>I have found that the effort of installing and troubleshooting the runtime exceeds the effort of building this custom emulator.</blockquote><p>To setup this development server, we will need to build a custom tool in C#.</p><p>Let's assume we would like to debug the <code>SimulatedTemperatureSensor</code> we built in the last post, but using the actual IoT Edge runtime this time instead of mocking it out. Let's create an new .NET Core console app next to the <code>SimulatedTemperatureSensor</code> that will hold all of our development tools:</p><pre><code class="language-bash">cd ..
+                    <p>In the <a href="/genesis/">last post</a> we saw how to setup an F5 development experience for an IoT Edge application, without having to install the IoT Edge Runtime or any other tool on our localhost, but rather by mocking the runtime's behavior in one of our mock dependencies. In this post, we will see how to setup the same F5 experience, but with using the actual IoT Edge Runtime.</p><p>This is an alternative approach to what the official Azure IoT Edge development tools offer. In this approach we will setup a development IoT Edge Server that will <strong>allow us to debug our modules with a simple F5 experience</strong>, no redeployment, no remote debugging, no runtime installation and troubleshooting.</p><h3 id="emulating-iot-edge-runtime">Emulating IoT Edge Runtime  </h3><p>Unfortunately, currently there is <strong>no development IoT Edge server</strong>, but we can build one!</p><blockquote>I have found that the effort of installing and troubleshooting the runtime on my development machine exceeds the effort of building this custom emulator.</blockquote><p>To setup this development server, we will need to build a custom tool in C#.</p><p>Let's assume we would like to debug the <code>SimulatedTemperatureSensor</code> we built in the last post, but using the actual IoT Edge runtime this time instead of mocking it out. Let's create an new .NET Core console app next to the <code>SimulatedTemperatureSensor</code> that will hold all of our development tools:</p><pre><code class="language-bash">cd ..
 mkdir DevelopmentTools
 cd DevelopmentTools
 dotnet new console
@@ -521,7 +521,7 @@ code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provisi
         }
     }
 }
-</code></pre><blockquote>Note: you don't need to design your IoT Edge module project in the specific structure we used, <strong>even the monolithic C# template works with this approach</strong>. In fact, all supported programming languages will work!</blockquote><h3 id="module-container">Module Container </h3><p>After completing out implementation and testing, we need to build the module container image. This is easily done, both in VS Code and Visual Studio.</p><p>In Visual Studio:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSDocker.gif" class="kg-image"></figure><p>In VS Code:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSCodeDocker.gif" class="kg-image"></figure><p>Both tools will automatically populate the required Dockerfile, and will setup the <strong>build and run</strong> tasks. Simply hit <code>CTRL+SHIFT+B</code> to trigger the image build.</p><blockquote>You can even debug the same application running inside a Linux container! This is very useful when we have system dependencies that we cannot install on our host. </blockquote><p>Last step is to push this container to your container registry and update the manifest accordingly (currently set to <code>your.azurecr.io</code> ) </p><blockquote>You need to include the container registry credentials if any. </blockquote><p>The entire application is published in <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this GitHub repo</a>.</p><h3 id="recap">Recap</h3><p>We saw how to setup an F5 development experience without using any tools, but just Docker and our C# code. This approach allows us to keep the same favorite development environment of our preference, without making any compromises.</p>
+</code></pre><blockquote>Note: you don't need to design your IoT Edge module project in the specific structure we used, <strong>even the monolithic C# template works with this approach</strong>. In fact, all supported programming languages will work!</blockquote><h3 id="module-container">Module Container </h3><p>After completing our implementation and testing, we need to build the module container image. This is easily done, both in VS Code and Visual Studio.</p><p>In Visual Studio:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSDocker.gif" class="kg-image"></figure><p>In VS Code:</p><figure class="kg-card kg-image-card kg-width-wide"><img src="https://havedatawilltrain.com/content/images/2020/04/VSCodeDocker.gif" class="kg-image"></figure><p>Both tools will automatically populate the required Dockerfile, and will setup the <strong>build and run</strong> tasks. Simply hit <code>CTRL+SHIFT+B</code> to trigger the image build.</p><blockquote>You can even debug the same application running inside a Linux container! This is very useful when we have system dependencies that we cannot install on our host. </blockquote><p>Last step is to push this container to your container registry and update the manifest accordingly (currently set to <code>your.azurecr.io</code> ) </p><blockquote>You need to include the container registry credentials if any. </blockquote><p>The entire application is published in <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this GitHub repo</a>.</p><h3 id="recap">Recap</h3><p>We saw how to setup an F5 development experience without using any tools, but just Docker and our C# code. This approach allows us to keep the same favorite development environment of our preference, without making any compromises.</p>
                 </div>
             </section>
 
@@ -712,7 +712,7 @@ code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provisi
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous">
     </script>
-    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=d0538246fb"></script>
+    <script type="text/javascript" src="/assets/built/jquery.fitvids.js?v=2257888ceb"></script>
 
 
     <script>
