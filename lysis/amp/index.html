@@ -19,7 +19,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com/lysis/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg" />
     <meta property="article:published_time" content="2020-04-22T23:29:26.000Z" />
-    <meta property="article:modified_time" content="2020-04-24T16:24:17.000Z" />
+    <meta property="article:modified_time" content="2020-04-28T23:49:20.000Z" />
     <meta property="article:tag" content="Azure IoT Edge" />
     
     <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
@@ -69,7 +69,7 @@
     "headline": "Lysis",
     "url": "https://havedatawilltrain.com/lysis/",
     "datePublished": "2020-04-22T23:29:26.000Z",
-    "dateModified": "2020-04-24T16:24:17.000Z",
+    "dateModified": "2020-04-28T23:49:20.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2020/04/bike-no-hands.jpg",
@@ -126,7 +126,7 @@ cd DevelopmentTools
 dotnet new console
 dotnet add package Microsoft.Azure.Devices
 dotnet add package Docker.DotNet
-code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provision a <strong>development IoT device.</strong></li><li>Create and push the appropriate <strong>development deployment manifest.</strong></li><li><strong>Run this device locally.</strong></li></ol><p>Here's the self-descriptive code of our tool's <code>Program.cs</code>:</p><pre><code class="language-csharp">namespace DevelopmenntTools
+code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provision a <strong>development IoT device.</strong></li><li>Create and push the appropriate <strong>development deployment manifest.</strong></li><li><strong>Run this device locally.</strong></li></ol><p>Here's the self-descriptive code of our tool's <code>Program.cs</code>:</p><pre><code class="language-csharp">namespace DevelopmentTools
 {
     using System;
     using System.IO;
@@ -154,7 +154,7 @@ code .</code></pre><p>This tool needs to perform three tasks:</p><ol><li>Provisi
         }
     }
 }
-</code></pre><p>We need to create a <code>Utilities.cs</code> file where we'll put the referenced three functions from above:</p><pre><code class="language-csharp">namespace DevelopmenntTools
+</code></pre><p>We need to create a <code>Utilities.cs</code> file where we'll put the referenced three functions from above:</p><pre><code class="language-csharp">namespace DevelopmentTools
 {
     using Docker.DotNet;
     using Docker.DotNet.Models;
