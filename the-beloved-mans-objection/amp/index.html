@@ -19,7 +19,7 @@
     <meta property="og:url" content="https://havedatawilltrain.com/the-beloved-mans-objection/" />
     <meta property="og:image" content="https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg" />
     <meta property="article:published_time" content="2020-04-28T23:31:01.000Z" />
-    <meta property="article:modified_time" content="2020-04-28T23:48:40.000Z" />
+    <meta property="article:modified_time" content="2020-04-29T03:02:51.000Z" />
     <meta property="article:tag" content="Azure IoT Edge" />
     
     <meta property="article:publisher" content="https://www.facebook.com/spyros.garyfallos" />
@@ -69,7 +69,7 @@
     "headline": "The beloved man&#x27;s objection",
     "url": "https://havedatawilltrain.com/the-beloved-mans-objection/",
     "datePublished": "2020-04-28T23:31:01.000Z",
-    "dateModified": "2020-04-28T23:48:40.000Z",
+    "dateModified": "2020-04-29T03:02:51.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg",
@@ -120,7 +120,7 @@
             </figure>
             <section class="post-content">
 
-                <p>In this mini-series we have analyzed different challenges around the IoT Edge development, and explored a few best practices that will help us avoid any unnecessary roughness when developing Edge applications. In the last post we saw how we can use most of these best practices to compose a loosely coupled Azure IoT Edge application and some tooling that allow us to have a true F5 development experience. Today we will see the main driver for all these patterns, which is <strong>unit testing</strong>.</p><p>The main challenge will any modern application is finding ways to test most of it's code, and then automating that. This automated testing capability can be perceived as the holy grail of every production system, because it greatly accelerates the <strong>software development life cycle </strong>iterations and eventually increases the overall product quality.</p><p>The challenge with Azure IoT Edge development is that the security and communication protocols are tightly coupled to the IoT C# SDK, making it very difficult to run a test without the corresponding infrastructure. Nevertheless, as we saw in <a href="https://havedatawilltrain.com/the-man-who-wouldnt-test/">this post</a>, there is an easy way to abstract this SDK dependency and run the business code using a <strong>mock implementation </strong>of the SDK. We will use the same approach to mock all other dependencies, and eventually test a stand alone business method, a <strong>unit</strong> <strong>test.</strong></p><h3 id="unit-testing-setup">Unit Testing Setup</h3><p>We will be using the <strong>xunit </strong>unit testing framework, a very popular option in .NET Core. We will build two projects from scratch, one <strong>IoT Edge module project </strong>similar to <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this</a> template, and an <strong>xunit unit testing project </strong>that references the former.</p><ol><li>Create the solution and project folders</li></ol><pre><code class="language-bash">mkdir UnitTestingExample
+                <p>In this mini-series we have analyzed different challenges around IoT Edge development, and explored a few best practices that will help us avoid any unnecessary roughness when developing Edge applications. In the last post we saw how we can use most of these best practices to compose a loosely coupled Azure IoT Edge application and some tooling that allows us to have a true F5 development experience. Today we will see the main driver for all these patterns, which is <strong>unit testing</strong>.</p><p>The main challenge with any modern application is finding ways to test most of it's code, and then automating that. This automated testing capability can be perceived as the holy grail of every production system, because it greatly accelerates the <strong>software development life cycle </strong>iterations and eventually increases the overall product quality.</p><p>The challenge with Azure IoT Edge development is that the security and communication protocols are tightly coupled to the IoT C# SDK, making it very difficult to run a test without the corresponding infrastructure. Nevertheless, as we saw in <a href="https://havedatawilltrain.com/the-man-who-wouldnt-test/">this post</a>, there is an easy way to abstract this SDK dependency and run the business code using a <strong>mock implementation </strong>of the SDK. We will use the same approach to mock all other dependencies, and eventually test a stand alone business method, a <strong>unit</strong> <strong>test.</strong></p><h3 id="unit-testing-setup">Unit Testing Setup</h3><p>We will be using the <strong>xunit </strong>unit testing framework, a very popular option in .NET Core. We will build two projects from scratch, one <strong>IoT Edge module project </strong>similar to <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this</a> template, and an <strong>xunit unit testing project </strong>that references the former.</p><ol><li>Create the solution and project folders</li></ol><pre><code class="language-bash">mkdir UnitTestingExample
 cd UnitTestingExample
 
 mkdir IoTModule
@@ -157,7 +157,7 @@ dotnet add package Serilog.Enrichers.Thread</code></pre><p>4. Add the module cod
         }
     }
 }
-</code></pre><p>5. This code references the <code>IModuleClient</code>  the <code>ModuleClientWrapper</code> and the module class, the <code>EventHandlerModule</code>. We have seen before the first two, they are useful to create an abstraction layer over the SDK and can be found in <a href="https://havedatawilltrain.com/genesis/">this</a> post. </p><p>6. The <code>EventHandlerModule.cs</code> code is this:</p><pre><code class="language-C#">namespace IoTModule
+</code></pre><p>5. This code references the <code>IModuleClient</code>  the <code>ModuleClientWrapper</code> and the module class, the <code>EventHandlerModule</code>. We have seen before the first two before. They are useful to create an abstraction layer over the SDK and can be found in <a href="https://havedatawilltrain.com/genesis/">this</a> post. </p><p>6. The <code>EventHandlerModule.cs</code> code is this:</p><pre><code class="language-C#">namespace IoTModule
 {
     using Microsoft.Azure.Devices.Client;
     using Microsoft.Extensions.Hosting;
@@ -235,7 +235,7 @@ public void TestInputMessageHandler()
     var serviceProvider = services.BuildServiceProvider();
     var hostedService = serviceProvider.GetService&lt;IHostedService&gt;();
     hostedService.StartAsync(new CancellationToken());
-}</code></pre><p>This code will try to create and our module, the <code>EventHandlerModule</code> hosted service class. Looking at this class constructor we can see that this service depends on two other services, the <code>IModuleClient</code> and the <code>ILogger&lt;EventHandlerModule&gt;</code> services.</p><p>Lets add a mock version of them:</p><pre><code class="language-C#">[Fact]
+}</code></pre><p>This code will try to create and start our module, the <code>EventHandlerModule</code> hosted service class. Looking at this class constructor we can see that this service depends on two other services, the <code>IModuleClient</code> and the <code>ILogger&lt;EventHandlerModule&gt;</code> services.</p><p>Lets add a mock version of them:</p><pre><code class="language-C#">[Fact]
 public async Task TestInputMessageHandler()
 {
     var services = new ServiceCollection();
