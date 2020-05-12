@@ -1,4 +1,330 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[HAVE DATA - WILL TRAIN]]></title><description><![CDATA[The adventures of a ML Engineer, who travels the Web working as a mercenary for people who hire him to solve their problems, but he provides his services for free to poor people that need his help]]></description><link>https://havedatawilltrain.com/</link><image><url>https://havedatawilltrain.com/favicon.png</url><title>HAVE DATA - WILL TRAIN</title><link>https://havedatawilltrain.com/</link></image><generator>Ghost 3.12</generator><lastBuildDate>Thu, 30 Apr 2020 19:04:28 GMT</lastBuildDate><atom:link href="https://havedatawilltrain.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[The beloved man's objection]]></title><description><![CDATA[This is the tenth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of Unit Testing in Azure IoT Edge.]]></description><link>https://havedatawilltrain.com/the-beloved-mans-objection/</link><guid isPermaLink="false">5ea6efe24dd4b80082b58ac5</guid><category><![CDATA[Azure IoT Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Tue, 28 Apr 2020 23:31:01 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg" alt="The beloved man's objection"><p>In this mini-series we have analyzed different challenges around IoT Edge development, and explored a few best practices that will help us avoid any unnecessary roughness when developing Edge applications. In the last post we saw how we can use most of these best practices to compose a loosely coupled Azure IoT Edge application and some tooling that allows us to have a true F5 development experience. Today we will see the main driver for all these patterns, which is <strong>unit testing</strong>.</p><p>The main challenge with any modern application is finding ways to test most of it's code, and then automating that. This automated testing capability can be perceived as the holy grail of every production system, because it greatly accelerates the <strong>software development life cycle </strong>iterations and eventually increases the overall product quality.</p><p>The challenge with Azure IoT Edge development is that the security and communication protocols are tightly coupled to the IoT C# SDK, making it very difficult to run a test without the corresponding infrastructure. Nevertheless, as we saw in <a href="https://havedatawilltrain.com/the-man-who-wouldnt-test/">this post</a>, there is an easy way to abstract this SDK dependency and run the business code using a <strong>mock implementation </strong>of the SDK. We will use the same approach to mock all other dependencies, and eventually test a stand alone business method, a <strong>unit</strong> <strong>test.</strong></p><h3 id="unit-testing-setup">Unit Testing Setup</h3><p>We will be using the <strong>xunit </strong>unit testing framework, a very popular option in .NET Core. We will build two projects from scratch, one <strong>IoT Edge module project </strong>similar to <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this</a> template, and an <strong>xunit unit testing project </strong>that references the former.</p><ol><li>Create the solution and project folders</li></ol><pre><code class="language-bash">mkdir UnitTestingExample
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[HAVE DATA - WILL TRAIN]]></title><description><![CDATA[The adventures of a ML Engineer, who travels the Web working as a mercenary for people who hire him to solve their problems, but he provides his services for free to poor people that need his help]]></description><link>https://havedatawilltrain.com/</link><image><url>https://havedatawilltrain.com/favicon.png</url><title>HAVE DATA - WILL TRAIN</title><link>https://havedatawilltrain.com/</link></image><generator>Ghost 3.12</generator><lastBuildDate>Tue, 12 May 2020 00:05:32 GMT</lastBuildDate><atom:link href="https://havedatawilltrain.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Tick on the Edge]]></title><description><![CDATA[In this post we examine how to run the TICK stack on the Edge, by transforming the TICK docker-compose definition to an Azure IoT Edge solution.]]></description><link>https://havedatawilltrain.com/tick-on-the-edge/</link><guid isPermaLink="false">5eb3667d21b7ba01b83f4f0a</guid><category><![CDATA[Intelligent Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Tue, 12 May 2020 00:05:07 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/05/tick5-2.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/05/tick5-2.jpg" alt="Tick on the Edge"><p>One of the biggest challenges in IoT Edge is <strong>Data Visualization</strong>. A standard approach is to move the data to the upstream and use various storage, querying and rendering tools to visualize the data. This can become particularly challenging when dealing with high-frequency data<strong> </strong>in a low-bandwidth connection. Here, we examine how to setup the <strong>TICK stack on Azure IoT Edge </strong>for storing, querying, processing, and visualizing your data on the edge.</p><p>The TICK stack consists of four individual services that have been developed to function as a complete framework, but are abstract enough to be interchangeable by third party services of similar capabilities. </p><p>According to Influx Data, the company that makes and supports the stack, TICK <em>"is a loosely coupled yet tightly integrated set of open source projects designed to handle massive amounts of time-stamped information to support your metrics analysis needs".</em></p><p>TICK consists of four services:<br>1. <strong>Telegraf</strong>, a telemetry and metrics collection mechanism,<br>2. <strong>InfuxDB</strong>, a time series database,<br>3. <strong>Chronograf</strong> , a time series visualization engine, and<br>4. <strong>Kapacitor</strong>, a time series data processing engine.</p><p>Although many variances of this stack exist, these combined four services cover most of the typical scenarios of the edge compute space. </p><p>The easiest way to get started with the TICK stack is by using the <a href="https://github.com/influxdata/sandbox">TICK sandbox repo</a>. This repo is a quick way to get the entire TICK Stack spun up and working together using docker containers through docker-compose.</p><p>The docker-compose file structure is somewhat similar to the Azure IoT Edge deployment manifest. The TICK sandbox converted for Azure IoT Edge is here, the rest of the post deal with how to convert the original sandbox, or any docker-compose application to run in Azure IoT Edge.</p><blockquote>The Azure IoT Edge TICK stack has been published <a href="https://github.com/paloukari/az-iot-edge-tick">in this repo</a>.</blockquote><h3 id="modules">Modules</h3><p>The docker-compose <strong>services</strong> correspond to the manifest <strong>modules</strong>, with two prerequisite modules defined as system modules, the edgeAgent and the edgeHub. The former is responsible for reading the manifest and starting up the containers on the edge, and the latter is there to facilitate any intra-module communication between the custom modules. In fact, if your modules do not use this communication scheme, then you can even omit the edgeHub system module.</p><p>Let's take a look on the docker-compose <strong>chronograf</strong> service. This service definition is based on the original sandbox chronograf service, with a few minor modifications:</p><ul><li>we've renamed the <code>images</code> folder to <code>modules</code></li><li>changed the way the image tagging schema</li><li>added a registry name on the images </li></ul><pre><code class="language-yaml">chronograf:
+  # Full tag list: https://hub.docker.com/r/library/chronograf/tags/
+  build:
+    context: ./modules/chronograf
+    dockerfile: ./Dockerfile
+    args:
+      CHRONOGRAF_TAG: ${CHRONOGRAF_TAG}
+  image: "${CONTAINER_REGISTRY_ADDRESS}/chrono_config:${VER}.${BLD}-${ARCH}"
+  environment:
+    RESOURCES_PATH: "/usr/share/chronograf/resources"
+  volumes:
+    # Mount for chronograf database
+    - /tmp/chronograf/data/:/var/lib/chronograf/
+  links:
+    # Chronograf requires network access to InfluxDB and Kapacitor
+    - influxdb
+    - kapacitor
+  ports:
+    # The WebUI for Chronograf is served on port 8888
+    - "8888:8888"
+  depends_on:
+    - kapacitor
+    - influxdb
+    - telegraf</code></pre><p>Here is the corresponding module in the deployment manifest. Azure IoT Edge has a few fundamental differences compared to docker compose. The first is that all modules operate in the same network, and as such, no special configuration is required for two modules to connect. Also, there is no startup ordering, the modules need to be resilient enough for every possible startup order.</p><pre><code class="language-json">"chronograf": {
+  "version": "1.0",
+  "type": "docker",
+  "status": "running",
+  "restartPolicy": "always",
+  "settings": {
+    "image": "${MODULES.chronograf}",
+    "createOptions": {
+      "Hostname": "chronograf",
+      "Env": [
+        "RESOURCES_PATH=/usr/share/chronograf/resources"
+      ],
+      "HostConfig": {
+        "Binds": [
+          "/tmp/chronograf/data/:/var/lib/chronograf/"
+        ],
+        "PortBindings": {
+          "8888/tcp": [
+            {
+              "HostPort": "8888"
+            }
+          ]
+        }
+      }
+    }
+  }
+}</code></pre><h3 id="module-definition-files">Module definition files </h3><p>We can see that the docker <strong>image creation configuration </strong>is missing completely from the manifest. Nevertheless, the VS Code Azure IoT Edge extension helps with managing a container build solution. This extension assumes there is <strong>a template manifest that points to module definition files</strong>, like this one:</p><pre><code class="language-json">{
+    "$schema-version": "0.0.1",
+    "description": "",
+    "image": {
+        "repository": "${CONTAINER_REGISTRY_ADDRESS}/chronograf",
+        "tag": {
+            "version": "${VER}.${BLD}",
+            "platforms": {
+                "amd64": "./Dockerfile"
+            }
+        },
+        "buildOptions": ["--build-arg CHRONOGRAF_TAG=${CHRONOGRAF_TAG}" ],
+        "contextPath": "./"
+    },
+    "language": "other"
+}
+</code></pre><p>The above  <code>module.json</code> file exists inside the <code>modules\chronograf</code> folder, and the manifest "points" to it by this line:</p><pre><code class="language-json">"image": "${MODULES.chronograf}"</code></pre><h3 id="parallel-docker-compose">Parallel docker-compose </h3><p>Although VS Code has commands to easily build and push the module container images, it is a good idea to keep a parallel docker-compose definition, primarily for experimenting outside the Edge runtime.</p><p>Here's the complete parallel docker-compose file for the TICK stack: </p><pre><code class="language-yaml">version: '3'
+services:
+  influxdb:
+    # Full tag list: https://hub.docker.com/r/library/influxdb/tags/
+    build:
+      context: ./modules/influxdb/
+      dockerfile: ./Dockerfile
+      args:
+        INFLUXDB_TAG: ${INFLUXDB_TAG}
+    image: "${CONTAINER_REGISTRY_ADDRESS}/influxdb:${VER}.${BLD}-${ARCH}"
+    volumes:
+      # Mount for influxdb data directory
+      - /tmp/influxdb/data:/var/lib/influxdb
+    ports:
+      # The API for InfluxDB is served on port 8086
+      - "8086:8086"
+      - "8082:8082"
+      # UDP Port
+      - "8089:8089/udp"
+
+  telegraf:
+    # Full tag list: https://hub.docker.com/r/library/telegraf/tags/
+    build:
+      context: ./modules/telegraf/
+      dockerfile: ./Dockerfile
+      args:
+        TELEGRAF_TAG: ${TELEGRAF_TAG}
+    image: "${CONTAINER_REGISTRY_ADDRESS}/telegraf:${VER}.${BLD}-${ARCH}"
+    environment:
+      HOSTNAME: "telegraf-getting-started"
+    # Telegraf requires network access to InfluxDB
+    links:
+      - influxdb
+    volumes:
+      # Mount for Docker API access
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - influxdb
+
+  kapacitor:
+  # Full tag list: https://hub.docker.com/r/library/kapacitor/tags/
+    build:
+      context: ./modules/kapacitor/
+      dockerfile: ./Dockerfile
+      args:
+        KAPACITOR_TAG: ${KAPACITOR_TAG}
+    image: "${CONTAINER_REGISTRY_ADDRESS}/kapacitor:${VER}.${BLD}-${ARCH}"
+    volumes:
+      # Mount for kapacitor data directory
+      - /tmp/kapacitor/data/:/var/lib/kapacitor
+    # Kapacitor requires network access to Influxdb
+    links:
+      - influxdb
+    ports:
+      # The API for Kapacitor is served on port 9092
+      - "9092:9092"
+
+  chronograf:
+    # Full tag list: https://hub.docker.com/r/library/chronograf/tags/
+    build:
+      context: ./modules/chronograf
+      dockerfile: ./Dockerfile
+      args:
+        CHRONOGRAF_TAG: ${CHRONOGRAF_TAG}
+    image: "${CONTAINER_REGISTRY_ADDRESS}/chrono_config:${VER}.${BLD}-${ARCH}"
+    environment:
+      RESOURCES_PATH: "/usr/share/chronograf/resources"
+    volumes:
+      # Mount for chronograf database
+      - /tmp/chronograf/data/:/var/lib/chronograf/
+    links:
+      # Chronograf requires network access to InfluxDB and Kapacitor
+      - influxdb
+      - kapacitor
+    ports:
+      # The WebUI for Chronograf is served on port 8888
+      - "8888:8888"
+    depends_on:
+      - kapacitor
+      - influxdb
+      - telegraf</code></pre><p>And here is the Azure IoT Edge <strong>template manifest</strong>:</p><pre><code class="language-json">{
+  "$schema-template": "2.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "${CONTAINER_REGISTRY_GROUP}": {
+                "username": "${CONTAINER_REGISTRY_USER_NAME}",
+                "password": "${CONTAINER_REGISTRY_PASSWORD}",
+                "address": "${CONTAINER_REGISTRY_ADDRESS}"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "chronograf": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.chronograf}",
+              "createOptions": {
+                "Hostname": "chronograf",
+                "Env": [
+                  "RESOURCES_PATH=/usr/share/chronograf/resources"
+                ],
+                "HostConfig": {
+                  "Binds": [
+                    "/tmp/chronograf/data/:/var/lib/chronograf/"
+                  ],
+                  "PortBindings": {
+                    "8888/tcp": [
+                      {
+                        "HostPort": "8888"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "influxdb": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.influxdb}",
+              "createOptions": {
+                "Hostname": "influxdb",
+                "Env": [],
+                "HostConfig": {
+                  "Binds": [
+                    "/tmp/influxdb/data:/var/lib/influxdb"
+                  ],
+                  "PortBindings": {
+                    "8086/tcp": [
+                      {
+                        "HostPort": "8086"
+                      }
+                    ],
+                    "8082/tcp": [
+                      {
+                        "HostPort": "8082"
+                      }
+                    ],
+                    "8089/udp": [
+                      {
+                        "HostPort": "8089"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "kapacitor": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.kapacitor}",
+              "createOptions": {
+                "Hostname": "kapacitor",
+                "Env": [],
+                "HostConfig": {
+                  "Binds": [
+                    "/tmp/kapacitor/data:/var/lib/kapacitor"
+                  ],
+                  "PortBindings": {
+                    "9092/tcp": [
+                      {
+                        "HostPort": "9092"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "telegraf": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.telegraf}",
+              "createOptions": {
+                "Hostname": "telegraf",
+                "Env": [
+                  "HOSTNAME=telegraf-getting-started"
+                ],
+                "HostConfig": {
+                  "Binds": [
+                    "/var/run/docker.sock:/var/run/docker.sock"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "allToIoTHub": "FROM /messages/modules/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}</code></pre><p>Assuming all other modules are properly defined with a <code>module.json</code> definition file, running the <code>Build and Push IoT Edge Solution</code> to build your module containers and push them in the specified registry.</p><blockquote>Make sure you specify your registry and the registry access credentials in the .env file first.</blockquote><p>Similarly, running the <code>Generate IoT Edge Deployment Manifest</code> command in VS Code, will generate the actual manifest to use on a device. In the explorer view of VS Code, locate the Azure IoT Hub pane, right click on an edge enabled device and run <code>Create deployment for Single Device</code> and select the generated manifest. This manifest will be pushed down to the running device. If you wait a few minutes to make sure all the modules have been downloaded and visit the <strong>8888 http device port</strong>, you'll see the Chronograf UI:</p><figure class="kg-card kg-image-card kg-width-full kg-card-hascaption"><img src="https://havedatawilltrain.com/content/images/2020/05/image-3.png" class="kg-image" alt="Tick on the Edge"><figcaption>Chronograf running on the Edge</figcaption></figure><h3 id="conclusion">Conclusion </h3><p>We saw how to transform any docker-compose file to an Azure IoT Edge solution, and how to <strong>run the TICK stack on Azure IoT Edge</strong>. Using this as starting point, we will see next how we can read and process high frequency device telemetry data.</p>]]></content:encoded></item><item><title><![CDATA[The beloved man's objection]]></title><description><![CDATA[This is the tenth post of a mini-series that aims to address the development experience and production readiness challenges in the space of IoT Edge, primarily under the lens of Azure IoT Edge. This post deals with the topic of Unit Testing in Azure IoT Edge.]]></description><link>https://havedatawilltrain.com/the-beloved-mans-objection/</link><guid isPermaLink="false">5ea6efe24dd4b80082b58ac5</guid><category><![CDATA[Azure IoT Edge]]></category><dc:creator><![CDATA[Spyros Garyfallos]]></dc:creator><pubDate>Tue, 28 Apr 2020 23:31:01 GMT</pubDate><media:content url="https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg" medium="image"/><content:encoded><![CDATA[<img src="https://havedatawilltrain.com/content/images/2020/04/invertebrate.jpg" alt="The beloved man's objection"><p>In this mini-series we have analyzed different challenges around IoT Edge development, and explored a few best practices that will help us avoid any unnecessary roughness when developing Edge applications. In the last post we saw how we can use most of these best practices to compose a loosely coupled Azure IoT Edge application and some tooling that allows us to have a true F5 development experience. Today we will see the main driver for all these patterns, which is <strong>unit testing</strong>.</p><p>The main challenge with any modern application is finding ways to test most of it's code, and then automating that. This automated testing capability can be perceived as the holy grail of every production system, because it greatly accelerates the <strong>software development life cycle </strong>iterations and eventually increases the overall product quality.</p><p>The challenge with Azure IoT Edge development is that the security and communication protocols are tightly coupled to the IoT C# SDK, making it very difficult to run a test without the corresponding infrastructure. Nevertheless, as we saw in <a href="https://havedatawilltrain.com/the-man-who-wouldnt-test/">this post</a>, there is an easy way to abstract this SDK dependency and run the business code using a <strong>mock implementation </strong>of the SDK. We will use the same approach to mock all other dependencies, and eventually test a stand alone business method, a <strong>unit</strong> <strong>test.</strong></p><h3 id="unit-testing-setup">Unit Testing Setup</h3><p>We will be using the <strong>xunit </strong>unit testing framework, a very popular option in .NET Core. We will build two projects from scratch, one <strong>IoT Edge module project </strong>similar to <a href="https://github.com/paloukari/SimulatedTemperatureSensor">this</a> template, and an <strong>xunit unit testing project </strong>that references the former.</p><ol><li>Create the solution and project folders</li></ol><pre><code class="language-bash">mkdir UnitTestingExample
 cd UnitTestingExample
 
 mkdir IoTModule
